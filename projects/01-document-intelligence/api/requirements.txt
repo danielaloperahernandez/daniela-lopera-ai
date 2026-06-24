@@ -1,0 +1,6 @@
+# Project 1 - Document Intelligence API
+# Install the shared core first:  pip install -e ../../../shared
+fastapi>=0.111,<1
+uvicorn[standard]>=0.30,<1
+python-multipart>=0.0.9,<1
+pypdf>=4.2,<6

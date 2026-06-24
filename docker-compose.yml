@@ -1,0 +1,52 @@
+# Local development stack for the AI Automation Portfolio.
+#
+#   docker compose up -d qdrant            # just the vector DB (needed by all projects)
+#   docker compose --profile full up -d    # qdrant + n8n + postgres (full hybrid demo)
+#
+# Qdrant data is persisted in ./qdrant_storage (gitignored).
+
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: portfolio-qdrant
+    ports:
+      - "6333:6333"   # REST + dashboard (http://localhost:6333/dashboard)
+      - "6334:6334"   # gRPC
+    volumes:
+      - ./qdrant_storage:/qdrant/storage
+    restart: unless-stopped
+
+  # --- Optional: n8n for Projects 1 & 2 (enable with `--profile full`) -------
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: portfolio-n8n
+    profiles: ["full"]
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - GENERIC_TIMEZONE=America/Bogota
+      # Lets n8n reach services on the host (e.g. the FastAPI service).
+      - N8N_SECURE_COOKIE=false
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  # --- Optional: Postgres sink for Project 1 (enable with `--profile full`) --
+  postgres:
+    image: postgres:16-alpine
+    container_name: portfolio-postgres
+    profiles: ["full"]
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=portfolio
+      - POSTGRES_PASSWORD=portfolio
+      - POSTGRES_DB=documents
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped

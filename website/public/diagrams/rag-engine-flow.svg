@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="620" viewBox="0 0 1280 620" font-family="Segoe UI, Arial, sans-serif">
+  <rect x="0" y="0" width="1280" height="620" fill="#020617"/>
+
+  <text x="40" y="46" fill="#e2e8f0" font-size="24" font-weight="700">RAG Engine - Retrieval-Augmented Generation (Python)</text>
+  <text x="40" y="70" fill="#94a3b8" font-size="14">Grounded, structured answers with a provider-agnostic core and a real evaluation harness</text>
+
+  <!-- BAND 1: ingestion -->
+  <rect x="24" y="90" width="1232" height="150" rx="12" fill="#0b1222" stroke="#1e293b"/>
+  <rect x="24" y="90" width="5" height="150" rx="2" fill="#6366f1"/>
+  <text x="44" y="116" fill="#818cf8" font-size="13" font-weight="700">[01]  INGESTION  (offline indexing)</text>
+
+  <g>
+    <rect x="60" y="134" width="160" height="58" rx="9" fill="#111827" stroke="#6366f1" stroke-width="1.5"/>
+    <text x="140" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Documents</text>
+    <text x="140" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">.md / .txt corpus</text>
+
+    <rect x="270" y="134" width="160" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="350" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Chunk</text>
+    <text x="350" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">800 / 120 overlap</text>
+
+    <rect x="480" y="134" width="170" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="565" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Embeddings</text>
+    <text x="565" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">OpenAI / Gemini</text>
+
+    <rect x="700" y="134" width="170" height="58" rx="9" fill="#0f1a22" stroke="#38bdf8" stroke-width="1.6"/>
+    <text x="785" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Qdrant (upsert)</text>
+    <text x="785" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">cosine, payload</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="2" fill="#475569">
+    <line x1="220" y1="163" x2="264" y2="163"/><polygon points="270,163 262,159 262,167"/>
+    <line x1="430" y1="163" x2="474" y2="163"/><polygon points="480,163 472,159 472,167"/>
+    <line x1="650" y1="163" x2="694" y2="163"/><polygon points="700,163 692,159 692,167"/>
+  </g>
+
+  <!-- BAND 2: retrieval -->
+  <rect x="24" y="256" width="1232" height="150" rx="12" fill="#0a1410" stroke="#1e293b"/>
+  <rect x="24" y="256" width="5" height="150" rx="2" fill="#10b981"/>
+  <text x="44" y="282" fill="#34d399" font-size="13" font-weight="700">[02]  RETRIEVAL  (query time)</text>
+
+  <g>
+    <rect x="60" y="300" width="140" height="58" rx="9" fill="#111827" stroke="#6366f1" stroke-width="1.5"/>
+    <text x="130" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Question</text>
+    <text x="130" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">user query</text>
+
+    <rect x="250" y="300" width="150" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="325" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Embeddings</text>
+    <text x="325" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">same model</text>
+
+    <rect x="450" y="300" width="190" height="58" rx="9" fill="#111827" stroke="#10b981" stroke-width="1.5"/>
+    <text x="545" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Similarity search</text>
+    <text x="545" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">top_k</text>
+
+    <rect x="690" y="300" width="140" height="58" rx="9" fill="#0f1a22" stroke="#38bdf8" stroke-width="1.6"/>
+    <text x="760" y="333" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Qdrant</text>
+
+    <rect x="880" y="300" width="180" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="970" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Retrieved chunks</text>
+    <text x="970" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">text + score + source</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="2" fill="#475569">
+    <line x1="200" y1="329" x2="244" y2="329"/><polygon points="250,329 242,325 242,333"/>
+    <line x1="400" y1="329" x2="444" y2="329"/><polygon points="450,329 442,325 442,333"/>
+    <line x1="640" y1="329" x2="684" y2="329"/><polygon points="690,329 682,325 682,333"/>
+    <line x1="830" y1="329" x2="874" y2="329"/><polygon points="880,329 872,325 872,333"/>
+  </g>
+  <!-- vector store link band1->band2 -->
+  <g stroke="#38bdf8" stroke-width="2" fill="#38bdf8" stroke-dasharray="5 4">
+    <path d="M785 192 L785 226 L760 226 L760 296" fill="none"/>
+  </g>
+  <polygon points="760,300 756,292 764,292" fill="#38bdf8"/>
+  <text x="795" y="222" fill="#7dd3fc" font-size="10.5">same vector store</text>
+
+  <!-- BAND 3: generation -->
+  <rect x="24" y="422" width="1232" height="150" rx="12" fill="#15100a" stroke="#1e293b"/>
+  <rect x="24" y="422" width="5" height="150" rx="2" fill="#f59e0b"/>
+  <text x="44" y="448" fill="#fbbf24" font-size="13" font-weight="700">[03]  GENERATION  (grounded + structured)</text>
+
+  <g>
+    <rect x="120" y="466" width="200" height="58" rx="9" fill="#111827" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="220" y="490" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Grounded RAG prompt</text>
+    <text x="220" y="508" fill="#94a3b8" font-size="11" text-anchor="middle">rag_answer v1.2.0</text>
+
+    <rect x="380" y="466" width="180" height="58" rx="9" fill="#111827" stroke="#818cf8" stroke-width="1.5"/>
+    <text x="470" y="490" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">LLM structured output</text>
+    <text x="470" y="508" fill="#94a3b8" font-size="11" text-anchor="middle">with retries</text>
+
+    <rect x="620" y="466" width="230" height="58" rx="9" fill="#111827" stroke="#10b981" stroke-width="1.5"/>
+    <text x="735" y="488" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">RAGAnswer</text>
+    <text x="735" y="506" fill="#94a3b8" font-size="11" text-anchor="middle">answer + answered + confidence + sources</text>
+
+    <rect x="900" y="466" width="290" height="58" rx="9" fill="#0f1830" stroke="#6366f1" stroke-width="1.5"/>
+    <text x="1045" y="488" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Evaluation harness</text>
+    <text x="1045" y="506" fill="#94a3b8" font-size="11" text-anchor="middle">correctness | faithfulness | abstention</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="2" fill="#475569">
+    <line x1="320" y1="495" x2="374" y2="495"/><polygon points="380,495 372,491 372,499"/>
+    <line x1="560" y1="495" x2="614" y2="495"/><polygon points="620,495 612,491 612,499"/>
+    <line x1="850" y1="495" x2="894" y2="495"/><polygon points="900,495 892,491 892,499"/>
+  </g>
+  <!-- retrieved chunks -> prompt (context) -->
+  <g stroke="#f59e0b" stroke-width="2" fill="#f59e0b">
+    <path d="M970 358 L970 414 L220 414 L220 462" fill="none"/><polygon points="220,466 216,458 224,458"/>
+  </g>
+  <text x="600" y="410" fill="#fbbf24" font-size="10.5">retrieved context</text>
+
+  <!-- legend -->
+  <text x="44" y="600" fill="#64748b" font-size="11">Stack:</text>
+  <g font-size="11" font-weight="700">
+    <rect x="92" y="588" width="92" height="22" rx="11" fill="#0a1410" stroke="#10b981"/><text x="138" y="603" fill="#a7f3d0" text-anchor="middle">LangChain</text>
+    <rect x="194" y="588" width="76" height="22" rx="11" fill="#0f1a22" stroke="#38bdf8"/><text x="232" y="603" fill="#bae6fd" text-anchor="middle">Qdrant</text>
+    <rect x="280" y="588" width="76" height="22" rx="11" fill="#0f1830" stroke="#818cf8"/><text x="318" y="603" fill="#c7d2fe" text-anchor="middle">OpenAI</text>
+    <rect x="366" y="588" width="86" height="22" rx="11" fill="#0f1830" stroke="#818cf8"/><text x="409" y="603" fill="#c7d2fe" text-anchor="middle">Anthropic</text>
+    <rect x="462" y="588" width="76" height="22" rx="11" fill="#0a1410" stroke="#34d399"/><text x="500" y="603" fill="#a7f3d0" text-anchor="middle">Gemini</text>
+  </g>
+
+  <text x="1256" y="608" fill="#475569" font-size="10" text-anchor="end">RAG Engine - LangChain + Qdrant + multi-provider core</text>
+</svg>

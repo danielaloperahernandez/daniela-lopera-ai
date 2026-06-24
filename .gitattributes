@@ -1,0 +1,37 @@
+# Normalize line endings: store everything with LF in the repo, and let Git
+# check out the platform-native endings. This silences the "LF will be replaced
+# by CRLF" warnings on Windows and keeps the repo consistent across machines.
+* text=auto eol=lf
+
+# Explicit text files (kept as LF)
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.js    text eol=lf
+*.mjs   text eol=lf
+*.json  text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.svg   text eol=lf
+*.sql   text eol=lf
+*.py    text eol=lf
+
+# Windows scripts must keep CRLF
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.ps1   text eol=crlf
+
+# Binary files: never normalize or diff as text
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.pdf   binary
+*.mp4   binary
+*.woff  binary
+*.woff2 binary

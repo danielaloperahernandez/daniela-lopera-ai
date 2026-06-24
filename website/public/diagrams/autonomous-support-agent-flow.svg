@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="620" viewBox="0 0 1280 620" font-family="Segoe UI, Arial, sans-serif">
+  <rect x="0" y="0" width="1280" height="620" fill="#020617"/>
+
+  <text x="40" y="46" fill="#e2e8f0" font-size="24" font-weight="700">Autonomous Support Agent - Telegram (n8n)</text>
+  <text x="40" y="70" fill="#94a3b8" font-size="14">Classify intent with an LLM, answer from a RAG knowledge base, and escalate the rest to a human</text>
+
+  <!-- BAND 1: intake & classification -->
+  <rect x="24" y="90" width="1232" height="150" rx="12" fill="#0b1222" stroke="#1e293b"/>
+  <rect x="24" y="90" width="5" height="150" rx="2" fill="#6366f1"/>
+  <text x="44" y="116" fill="#818cf8" font-size="13" font-weight="700">[01]  INTAKE AND CLASSIFICATION</text>
+
+  <g>
+    <rect x="60" y="134" width="160" height="58" rx="9" fill="#111827" stroke="#6366f1" stroke-width="1.5"/>
+    <text x="140" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Telegram Trigger</text>
+    <text x="140" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">inbound message</text>
+
+    <rect x="270" y="134" width="190" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="365" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Classify Intent (LLM)</text>
+    <text x="365" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">JSON mode, taxonomy</text>
+
+    <rect x="510" y="134" width="150" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="585" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Parse Intent</text>
+    <text x="585" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">category, priority</text>
+
+    <rect x="710" y="134" width="160" height="58" rx="9" fill="#0f1830" stroke="#f59e0b" stroke-width="1.8"/>
+    <text x="790" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Route by Intent</text>
+    <text x="790" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">switch</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="2" fill="#475569">
+    <line x1="220" y1="163" x2="264" y2="163"/><polygon points="270,163 262,159 262,167"/>
+    <line x1="460" y1="163" x2="504" y2="163"/><polygon points="510,163 502,159 502,167"/>
+    <line x1="660" y1="163" x2="704" y2="163"/><polygon points="710,163 702,159 702,167"/>
+  </g>
+
+  <!-- BAND 2: routing & response -->
+  <rect x="24" y="256" width="1232" height="150" rx="12" fill="#0a1410" stroke="#1e293b"/>
+  <rect x="24" y="256" width="5" height="150" rx="2" fill="#10b981"/>
+  <text x="44" y="282" fill="#34d399" font-size="13" font-weight="700">[02]  ROUTING AND RESPONSE</text>
+
+  <g>
+    <rect x="110" y="300" width="190" height="58" rx="9" fill="#111827" stroke="#10b981" stroke-width="1.5"/>
+    <text x="205" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Query Knowledge Base</text>
+    <text x="205" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">RAG API /ask</text>
+
+    <rect x="350" y="300" width="120" height="58" rx="9" fill="#0f1830" stroke="#10b981" stroke-width="1.6"/>
+    <text x="410" y="333" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">answered?</text>
+
+    <rect x="520" y="300" width="200" height="58" rx="9" fill="#111827" stroke="#10b981" stroke-width="1.5"/>
+    <text x="620" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Reply grounded answer</text>
+    <text x="620" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">Telegram</text>
+
+    <rect x="770" y="300" width="160" height="58" rx="9" fill="#111827" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="850" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Escalate to human</text>
+    <text x="850" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">holding reply</text>
+
+    <rect x="970" y="300" width="170" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="1055" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Notify team</text>
+    <text x="1055" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">Telegram channel</text>
+  </g>
+
+  <!-- routing arrows from band1 -->
+  <g stroke="#10b981" stroke-width="2" fill="#10b981">
+    <path d="M790 192 L790 222 L205 222 L205 296" fill="none"/><polygon points="205,300 201,292 209,292"/>
+  </g>
+  <text x="215" y="218" fill="#34d399" font-size="10.5">category = question</text>
+  <g stroke="#f59e0b" stroke-width="2" fill="#f59e0b">
+    <path d="M790 192 L790 238 L850 238 L850 296" fill="none"/><polygon points="850,300 846,292 854,292"/>
+  </g>
+  <text x="806" y="234" fill="#fbbf24" font-size="10.5">escalate / other</text>
+
+  <g stroke="#475569" stroke-width="2" fill="#475569">
+    <line x1="300" y1="329" x2="344" y2="329"/><polygon points="350,329 342,325 342,333"/>
+    <line x1="470" y1="329" x2="514" y2="329"/><polygon points="520,329 512,325 512,333"/>
+    <line x1="930" y1="329" x2="964" y2="329"/><polygon points="970,329 962,325 962,333"/>
+    <!-- answered? no -> escalate (route under) -->
+    <path d="M410 358 L410 380 L850 380 L850 360" fill="none"/><polygon points="850,358 846,366 854,366"/>
+  </g>
+  <text x="476" y="322" fill="#34d399" font-size="10">yes</text>
+  <text x="418" y="375" fill="#f87171" font-size="10">no (not confident)</text>
+
+  <!-- BAND 3: error handling -->
+  <rect x="24" y="422" width="1232" height="150" rx="12" fill="#170b0b" stroke="#1e293b"/>
+  <rect x="24" y="422" width="5" height="150" rx="2" fill="#ef4444"/>
+  <text x="44" y="448" fill="#f87171" font-size="13" font-weight="700">[03]  ERROR HANDLING</text>
+
+  <g>
+    <rect x="120" y="466" width="200" height="58" rx="9" fill="#111827" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="220" y="490" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Classify / KB failure</text>
+    <text x="220" y="508" fill="#94a3b8" font-size="11" text-anchor="middle">after node retries</text>
+
+    <rect x="380" y="466" width="180" height="58" rx="9" fill="#0f1830" stroke="#ef4444" stroke-width="1.6"/>
+    <text x="470" y="490" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Error Trigger workflow</text>
+    <text x="470" y="508" fill="#94a3b8" font-size="11" text-anchor="middle">central handler</text>
+
+    <rect x="620" y="466" width="200" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="720" y="490" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Alert team on Telegram</text>
+    <text x="720" y="508" fill="#94a3b8" font-size="11" text-anchor="middle">with execution trace</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="2" fill="#475569">
+    <line x1="320" y1="495" x2="374" y2="495"/><polygon points="380,495 372,491 372,499"/>
+    <line x1="560" y1="495" x2="614" y2="495"/><polygon points="620,495 612,491 612,499"/>
+  </g>
+  <g stroke="#ef4444" stroke-width="1.8" stroke-dasharray="5 4" fill="none">
+    <path d="M205 358 L205 440 L470 440 L470 462"/>
+  </g>
+  <polygon points="470,466 466,458 474,458" fill="#ef4444"/>
+  <text x="225" y="452" fill="#f87171" font-size="10.5">on error</text>
+
+  <!-- legend -->
+  <text x="44" y="600" fill="#64748b" font-size="11">Stack:</text>
+  <g font-size="11" font-weight="700">
+    <rect x="92" y="588" width="70" height="22" rx="11" fill="#0f1830" stroke="#6366f1"/><text x="127" y="603" fill="#c7d2fe" text-anchor="middle">n8n</text>
+    <rect x="172" y="588" width="84" height="22" rx="11" fill="#170b0b" stroke="#ef4444"/><text x="214" y="603" fill="#fecaca" text-anchor="middle">Telegram</text>
+    <rect x="266" y="588" width="76" height="22" rx="11" fill="#0f1830" stroke="#818cf8"/><text x="304" y="603" fill="#c7d2fe" text-anchor="middle">OpenAI</text>
+    <rect x="352" y="588" width="76" height="22" rx="11" fill="#0a1410" stroke="#34d399"/><text x="390" y="603" fill="#a7f3d0" text-anchor="middle">Qdrant</text>
+    <rect x="438" y="588" width="92" height="22" rx="11" fill="#0a1410" stroke="#10b981"/><text x="484" y="603" fill="#a7f3d0" text-anchor="middle">RAG API</text>
+  </g>
+
+  <text x="1256" y="608" fill="#475569" font-size="10" text-anchor="end">Autonomous Support Agent - n8n + Telegram + RAG</text>
+</svg>

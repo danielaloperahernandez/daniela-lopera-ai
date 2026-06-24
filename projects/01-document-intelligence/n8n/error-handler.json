@@ -1,0 +1,83 @@
+{
+  "name": "Doc Intelligence - Error Handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "e1f2a3b4-0001-4000-8000-000000000001",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [-200, 300],
+      "notesInFlow": true,
+      "notes": "Runs automatically whenever any workflow that points its `errorWorkflow` here fails."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "f1", "name": "workflow", "value": "={{ $json.workflow.name }}", "type": "string" },
+            { "id": "f2", "name": "node", "value": "={{ $json.execution.lastNodeExecuted }}", "type": "string" },
+            { "id": "f3", "name": "message", "value": "={{ $json.execution.error.message }}", "type": "string" },
+            { "id": "f4", "name": "execution_url", "value": "={{ $json.execution.url }}", "type": "string" }
+          ]
+        }
+      },
+      "id": "e1f2a3b4-0002-4000-8000-000000000002",
+      "name": "Shape Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [40, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_ALERT_CHAT_ID }}",
+        "text": "=FAILURE in \"{{ $json.workflow }}\"\nNode: {{ $json.node }}\nError: {{ $json.message }}\nTrace: {{ $json.execution_url }}",
+        "additionalFields": { "appendAttribution": false }
+      },
+      "id": "e1f2a3b4-0003-4000-8000-000000000003",
+      "name": "Alert on Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [280, 200]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": { "__rl": true, "value": "public", "mode": "list" },
+        "table": { "__rl": true, "value": "error_log", "mode": "list" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow": "={{ $json.workflow }}",
+            "node": "={{ $json.node }}",
+            "message": "={{ $json.message }}",
+            "occurred_at": "={{ $now.toISO() }}"
+          }
+        }
+      },
+      "id": "e1f2a3b4-0004-4000-8000-000000000004",
+      "name": "Persist Error",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [280, 400]
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [[{ "node": "Shape Error", "type": "main", "index": 0 }]]
+    },
+    "Shape Error": {
+      "main": [
+        [
+          { "node": "Alert on Telegram", "type": "main", "index": 0 },
+          { "node": "Persist Error", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "tags": [{ "name": "portfolio" }, { "name": "error-handling" }],
+  "meta": {
+    "description": "Central error handler. Set as the `errorWorkflow` on the main workflows so any failure raises a Telegram alert and is logged to Postgres."
+  }
+}

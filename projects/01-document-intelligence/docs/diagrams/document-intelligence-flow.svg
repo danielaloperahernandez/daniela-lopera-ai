@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="620" viewBox="0 0 1280 620" font-family="Segoe UI, Arial, sans-serif">
+  <rect x="0" y="0" width="1280" height="620" fill="#020617"/>
+
+  <text x="40" y="46" fill="#e2e8f0" font-size="24" font-weight="700">Document Intelligence - Hybrid (Python + n8n)</text>
+  <text x="40" y="70" fill="#94a3b8" font-size="14">n8n orchestrates the business flow; a Python FastAPI service does the structured AI extraction</text>
+
+  <!-- BAND 1: n8n orchestration -->
+  <rect x="24" y="90" width="1232" height="150" rx="12" fill="#0b1222" stroke="#1e293b"/>
+  <rect x="24" y="90" width="5" height="150" rx="2" fill="#6366f1"/>
+  <text x="44" y="116" fill="#818cf8" font-size="13" font-weight="700">[01]  n8n ORCHESTRATION</text>
+
+  <g>
+    <rect x="44" y="134" width="132" height="58" rx="9" fill="#111827" stroke="#6366f1" stroke-width="1.5"/>
+    <text x="110" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Email w/ PDF</text>
+    <text x="110" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">invoice attachment</text>
+
+    <rect x="200" y="134" width="140" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="270" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Email Trigger</text>
+    <text x="270" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">IMAP, unread</text>
+
+    <rect x="364" y="134" width="146" height="58" rx="9" fill="#0f1830" stroke="#f59e0b" stroke-width="1.8"/>
+    <text x="437" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Has attachment?</text>
+    <text x="437" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">IF</text>
+
+    <rect x="558" y="134" width="170" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="643" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Call Extraction API</text>
+    <text x="643" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">HTTP, retries x3, x-api-key</text>
+
+    <rect x="752" y="134" width="150" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="827" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Save to Postgres</text>
+    <text x="827" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">invoices table</text>
+
+    <rect x="926" y="134" width="150" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="1001" y="158" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Notify success</text>
+    <text x="1001" y="176" fill="#94a3b8" font-size="11" text-anchor="middle">Telegram</text>
+
+    <rect x="364" y="202" width="146" height="26" rx="9" fill="#111827" stroke="#475569" stroke-width="1.2"/>
+    <text x="437" y="219" fill="#94a3b8" font-size="10.5" font-weight="700" text-anchor="middle">no: skip + notify</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="2" fill="#475569">
+    <line x1="176" y1="163" x2="194" y2="163"/><polygon points="200,163 192,159 192,167"/>
+    <line x1="340" y1="163" x2="358" y2="163"/><polygon points="364,163 356,159 356,167"/>
+    <line x1="510" y1="163" x2="552" y2="163"/><polygon points="558,163 550,159 550,167"/>
+    <line x1="728" y1="163" x2="746" y2="163"/><polygon points="752,163 744,159 744,167"/>
+    <line x1="902" y1="163" x2="920" y2="163"/><polygon points="926,163 918,159 918,167"/>
+    <line x1="437" y1="192" x2="437" y2="200"/><polygon points="437,202 433,196 441,196"/>
+  </g>
+  <text x="520" y="156" fill="#34d399" font-size="10">yes</text>
+
+  <!-- BAND 2: Python FastAPI service -->
+  <rect x="24" y="256" width="1232" height="150" rx="12" fill="#0a1410" stroke="#1e293b"/>
+  <rect x="24" y="256" width="5" height="150" rx="2" fill="#10b981"/>
+  <text x="44" y="282" fill="#34d399" font-size="13" font-weight="700">[02]  PYTHON FASTAPI SERVICE  (POST /extract)</text>
+
+  <g>
+    <rect x="120" y="300" width="150" height="58" rx="9" fill="#111827" stroke="#10b981" stroke-width="1.5"/>
+    <text x="195" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Receive PDF</text>
+    <text x="195" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">multipart upload</text>
+
+    <rect x="320" y="300" width="150" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="395" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">pypdf extract</text>
+    <text x="395" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">raw text + pages</text>
+
+    <rect x="520" y="300" width="190" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="615" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">LLM structured output</text>
+    <text x="615" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">document_extraction v2.0</text>
+
+    <rect x="760" y="300" width="180" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="850" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Validated InvoiceData</text>
+    <text x="850" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">Pydantic schema</text>
+
+    <rect x="990" y="300" width="150" height="58" rx="9" fill="#111827" stroke="#10b981" stroke-width="1.5"/>
+    <text x="1065" y="324" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Return JSON</text>
+    <text x="1065" y="342" fill="#94a3b8" font-size="11" text-anchor="middle">to n8n</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="2" fill="#475569">
+    <line x1="270" y1="329" x2="314" y2="329"/><polygon points="320,329 312,325 312,333"/>
+    <line x1="470" y1="329" x2="514" y2="329"/><polygon points="520,329 512,325 512,333"/>
+    <line x1="710" y1="329" x2="754" y2="329"/><polygon points="760,329 752,325 752,333"/>
+    <line x1="940" y1="329" x2="984" y2="329"/><polygon points="990,329 982,325 982,333"/>
+  </g>
+
+  <!-- call down / return up between band1 and band2 -->
+  <g stroke="#6366f1" stroke-width="2" fill="#6366f1">
+    <path d="M643 192 L643 224 L195 224 L195 296" fill="none"/><polygon points="195,300 191,292 199,292"/>
+  </g>
+  <text x="528" y="220" fill="#818cf8" font-size="10.5">POST /extract (HTTP)</text>
+  <g stroke="#10b981" stroke-width="2" fill="#10b981">
+    <path d="M1065 300 L1065 246 L827 246 L827 194" fill="none"/><polygon points="827,192 823,200 831,200"/>
+  </g>
+  <text x="880" y="242" fill="#34d399" font-size="10.5">structured JSON</text>
+
+  <!-- BAND 3: error handling -->
+  <rect x="24" y="422" width="1232" height="150" rx="12" fill="#170b0b" stroke="#1e293b"/>
+  <rect x="24" y="422" width="5" height="150" rx="2" fill="#ef4444"/>
+  <text x="44" y="448" fill="#f87171" font-size="13" font-weight="700">[03]  ERROR HANDLING</text>
+
+  <g>
+    <rect x="120" y="466" width="190" height="58" rx="9" fill="#111827" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="215" y="490" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">API failure / bad PDF</text>
+    <text x="215" y="508" fill="#94a3b8" font-size="11" text-anchor="middle">502 / 422 envelope</text>
+
+    <rect x="360" y="466" width="180" height="58" rx="9" fill="#0f1830" stroke="#ef4444" stroke-width="1.6"/>
+    <text x="450" y="490" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Error Trigger workflow</text>
+    <text x="450" y="508" fill="#94a3b8" font-size="11" text-anchor="middle">central handler</text>
+
+    <rect x="590" y="466" width="160" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="670" y="490" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">Telegram alert</text>
+    <text x="670" y="508" fill="#94a3b8" font-size="11" text-anchor="middle">notify on failure</text>
+
+    <rect x="800" y="466" width="170" height="58" rx="9" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="885" y="490" fill="#e2e8f0" font-size="12.5" font-weight="700" text-anchor="middle">error_log (Postgres)</text>
+    <text x="885" y="508" fill="#94a3b8" font-size="11" text-anchor="middle">persist for audit</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="2" fill="#475569">
+    <line x1="310" y1="495" x2="354" y2="495"/><polygon points="360,495 352,491 352,499"/>
+    <line x1="540" y1="495" x2="584" y2="495"/><polygon points="590,495 582,491 582,499"/>
+    <line x1="750" y1="495" x2="794" y2="495"/><polygon points="800,495 792,491 792,499"/>
+  </g>
+  <g stroke="#ef4444" stroke-width="1.8" stroke-dasharray="5 4" fill="none">
+    <path d="M643 358 L643 440 L450 440 L450 462"/>
+  </g>
+  <polygon points="450,466 446,458 454,458" fill="#ef4444"/>
+  <text x="470" y="452" fill="#f87171" font-size="10.5">on failure (retries exhausted)</text>
+
+  <!-- legend -->
+  <text x="44" y="600" fill="#64748b" font-size="11">Stack:</text>
+  <g font-size="11" font-weight="700">
+    <rect x="92" y="588" width="80" height="22" rx="11" fill="#0a1410" stroke="#10b981"/><text x="132" y="603" fill="#a7f3d0" text-anchor="middle">FastAPI</text>
+    <rect x="182" y="588" width="70" height="22" rx="11" fill="#0f1830" stroke="#6366f1"/><text x="217" y="603" fill="#c7d2fe" text-anchor="middle">n8n</text>
+    <rect x="262" y="588" width="70" height="22" rx="11" fill="#111827" stroke="#475569"/><text x="297" y="603" fill="#cbd5e1" text-anchor="middle">pypdf</text>
+    <rect x="342" y="588" width="84" height="22" rx="11" fill="#0f1830" stroke="#38bdf8"/><text x="384" y="603" fill="#bae6fd" text-anchor="middle">Postgres</text>
+    <rect x="436" y="588" width="84" height="22" rx="11" fill="#170b0b" stroke="#ef4444"/><text x="478" y="603" fill="#fecaca" text-anchor="middle">Telegram</text>
+    <rect x="530" y="588" width="170" height="22" rx="11" fill="#0f1830" stroke="#818cf8"/><text x="615" y="603" fill="#c7d2fe" text-anchor="middle">OpenAI / Anthropic / Gemini</text>
+  </g>
+
+  <text x="1256" y="608" fill="#475569" font-size="10" text-anchor="end">Document Intelligence - FastAPI + n8n + Postgres</text>
+</svg>

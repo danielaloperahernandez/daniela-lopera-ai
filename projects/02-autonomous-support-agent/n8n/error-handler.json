@@ -1,0 +1,51 @@
+{
+  "name": "Support Agent - Error Handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c3d4e5f6-0001-4000-8000-000000000001",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [-200, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "g1", "name": "workflow", "value": "={{ $json.workflow.name }}", "type": "string" },
+            { "id": "g2", "name": "node", "value": "={{ $json.execution.lastNodeExecuted }}", "type": "string" },
+            { "id": "g3", "name": "message", "value": "={{ $json.execution.error.message }}", "type": "string" },
+            { "id": "g4", "name": "execution_url", "value": "={{ $json.execution.url }}", "type": "string" }
+          ]
+        }
+      },
+      "id": "c3d4e5f6-0002-4000-8000-000000000002",
+      "name": "Shape Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [40, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.SUPPORT_TEAM_CHAT_ID }}",
+        "text": "=Support agent FAILURE in \"{{ $json.workflow }}\"\nNode: {{ $json.node }}\nError: {{ $json.message }}\nTrace: {{ $json.execution_url }}",
+        "additionalFields": { "appendAttribution": false }
+      },
+      "id": "c3d4e5f6-0003-4000-8000-000000000003",
+      "name": "Alert Team",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [280, 300]
+    }
+  ],
+  "connections": {
+    "Error Trigger": { "main": [[{ "node": "Shape Error", "type": "main", "index": 0 }]] },
+    "Shape Error": { "main": [[{ "node": "Alert Team", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "tags": [{ "name": "portfolio" }, { "name": "error-handling" }],
+  "meta": {
+    "description": "Central error handler for the support agent. Alerts the team on Telegram when the main workflow throws after its node-level retries are exhausted."
+  }
+}

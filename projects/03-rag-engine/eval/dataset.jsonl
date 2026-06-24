@@ -1,0 +1,8 @@
+{"question": "What distance metric do the Qdrant collections in this project use?", "ground_truth": "Cosine distance.", "expected_answerable": true}
+{"question": "Which ports does Qdrant serve REST and gRPC on?", "ground_truth": "REST on port 6333 and gRPC on port 6334.", "expected_answerable": true}
+{"question": "What chunk size and overlap does the RAG pipeline use?", "ground_truth": "800 characters with 120 characters of overlap.", "expected_answerable": true}
+{"question": "Why does RAG reduce hallucinations?", "ground_truth": "Because it grounds answers in retrieved source text instead of relying only on the model's parametric memory.", "expected_answerable": true}
+{"question": "What are the three steps of the RAG pipeline?", "ground_truth": "Ingestion, retrieval, and generation.", "expected_answerable": true}
+{"question": "Which embedding provider is used as a fallback when Anthropic is the chat provider?", "ground_truth": "OpenAI embeddings.", "expected_answerable": true}
+{"question": "What is an embedding?", "ground_truth": "A dense numeric vector that represents the meaning of a piece of text.", "expected_answerable": true}
+{"question": "What is the capital of France?", "ground_truth": "I don't have enough information to answer that.", "expected_answerable": false}

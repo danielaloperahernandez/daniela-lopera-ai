@@ -1,0 +1,15 @@
+# Shared AI core dependencies.
+# Pinned to compatible minimums; install latest patch within these ranges.
+pydantic>=2.7,<3
+pydantic-settings>=2.3,<3
+PyYAML>=6.0,<7
+tenacity>=8.3,<10
+
+# LangChain + provider integrations
+langchain-core>=0.3,<0.4
+langchain-openai>=0.2,<0.4
+langchain-anthropic>=0.2,<0.4
+langchain-google-genai>=2.0,<3
+
+# Vector database client
+qdrant-client>=1.9,<2

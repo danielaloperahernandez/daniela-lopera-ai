@@ -1,0 +1,151 @@
+{
+  "name": "Doc Intelligence - Invoice Orchestration",
+  "nodes": [
+    {
+      "parameters": {
+        "mailbox": "INBOX",
+        "options": {
+          "downloadAttachments": true,
+          "customEmailConfig": "[\"UNSEEN\"]"
+        }
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000001",
+      "name": "Email Trigger (IMAP)",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2,
+      "position": [-260, 300],
+      "notesInFlow": true,
+      "notes": "Fires on new unread email; downloads PDF attachments."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "version": 2 },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $binary ? Object.keys($binary).length : 0 }}",
+              "rightValue": 0,
+              "operator": { "type": "number", "operation": "gt" }
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-0002-4000-8000-000000000002",
+      "name": "Has Attachment?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [-40, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.RAG_API_URL }}/extract",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $env.DOC_API_KEY }}" }
+          ]
+        },
+        "contentType": "multipart-form-data",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "attachment_0"
+            }
+          ]
+        },
+        "options": {
+          "retry": { "retry": true, "maxTries": 3, "waitBetweenTries": 2000 },
+          "timeout": 60000
+        }
+      },
+      "id": "a1b2c3d4-0003-4000-8000-000000000003",
+      "name": "Call Extraction API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [200, 200],
+      "notesInFlow": true,
+      "notes": "POST the PDF to the Python FastAPI microservice. Retries 3x on transient failure."
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": { "__rl": true, "value": "public", "mode": "list" },
+        "table": { "__rl": true, "value": "invoices", "mode": "list" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "invoice_number": "={{ $json.data.invoice_number }}",
+            "vendor_name": "={{ $json.data.vendor_name }}",
+            "issue_date": "={{ $json.data.issue_date }}",
+            "due_date": "={{ $json.data.due_date }}",
+            "currency": "={{ $json.data.currency }}",
+            "total": "={{ $json.data.total }}",
+            "source_file": "={{ $json.filename }}",
+            "raw": "={{ JSON.stringify($json.data) }}"
+          }
+        }
+      },
+      "id": "a1b2c3d4-0004-4000-8000-000000000004",
+      "name": "Save to Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [440, 200]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_ALERT_CHAT_ID }}",
+        "text": "=Invoice processed: {{ $json.data.invoice_number }} from {{ $json.data.vendor_name }} - total {{ $json.data.total }} {{ $json.data.currency }}",
+        "additionalFields": {}
+      },
+      "id": "a1b2c3d4-0005-4000-8000-000000000005",
+      "name": "Notify Success",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_ALERT_CHAT_ID }}",
+        "text": "=Skipped an email with no PDF attachment (subject: {{ $json.subject }}).",
+        "additionalFields": {}
+      },
+      "id": "a1b2c3d4-0006-4000-8000-000000000006",
+      "name": "Skip (no attachment)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [200, 420]
+    }
+  ],
+  "connections": {
+    "Email Trigger (IMAP)": {
+      "main": [[{ "node": "Has Attachment?", "type": "main", "index": 0 }]]
+    },
+    "Has Attachment?": {
+      "main": [
+        [{ "node": "Call Extraction API", "type": "main", "index": 0 }],
+        [{ "node": "Skip (no attachment)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Call Extraction API": {
+      "main": [[{ "node": "Save to Postgres", "type": "main", "index": 0 }]]
+    },
+    "Save to Postgres": {
+      "main": [[{ "node": "Notify Success", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Doc Intelligence - Error Handler",
+    "saveDataErrorExecution": "all",
+    "saveExecutionProgress": true
+  },
+  "tags": [{ "name": "portfolio" }, { "name": "document-intelligence" }],
+  "meta": {
+    "description": "Receives invoices by email, extracts structured data via the Python API, stores them in Postgres and notifies. On failure, delegates to the Error Handler workflow."
+  }
+}

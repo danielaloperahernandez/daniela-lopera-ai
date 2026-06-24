@@ -1,0 +1,31 @@
+{
+  "success": true,
+  "filename": "acme-invoice-0042.pdf",
+  "pages": 1,
+  "characters": 1183,
+  "data": {
+    "invoice_number": "INV-0042",
+    "issue_date": "2026-05-18",
+    "due_date": "2026-06-17",
+    "vendor_name": "ACME Cloud Services, Inc.",
+    "customer_name": "Northwind Labs",
+    "currency": "USD",
+    "subtotal": 1200.0,
+    "tax": 228.0,
+    "total": 1428.0,
+    "line_items": [
+      {
+        "description": "Pro plan - May 2026",
+        "quantity": 1,
+        "unit_price": 1000.0,
+        "amount": 1000.0
+      },
+      {
+        "description": "Additional seats (4 x 50)",
+        "quantity": 4,
+        "unit_price": 50.0,
+        "amount": 200.0
+      }
+    ]
+  }
+}

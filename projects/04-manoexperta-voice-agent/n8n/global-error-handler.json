@@ -1,0 +1,71 @@
+{
+  "name": "ManoExperta: Global Error Handler (Telegram)",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9b2c3d4e-0010-4000-9000-000000000001",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "=ManoExperta - ERROR NO CONTROLADO en el flujo\nWorkflow: {{ $json.workflow?.name }}\nNodo que fallo: {{ $json.execution?.lastNodeExecuted }}\nMensaje: {{ $json.execution?.error?.message }}\nExecution ID: {{ $json.execution?.id }}\nURL: {{ $json.execution?.url }}\nHora (Bogota): {{ $now.setZone('America/Bogota').toFormat('yyyy-LL-dd HH:mm:ss') }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        0
+      ],
+      "id": "9b2c3d4e-0010-4000-9000-000000000002",
+      "name": "Telegram Global Alert",
+      "webhookId": "manoexperta-tg-error-global"
+    },
+    {
+      "parameters": {
+        "content": "# Red de seguridad global\n\nEste workflow se dispara automaticamente cuando CUALQUIER ejecucion de un workflow fallido (con este asignado como Error Workflow) lanza un error no controlado.\n\n## Configuracion\n1. Importa este workflow y actívalo.\n2. En el workflow principal `ManoExperta: Vapi Core API`, ve a Settings > Error Workflow y selecciona este workflow.\n3. Configura la credencial de Telegram en el nodo `Telegram Global Alert` y reemplaza `YOUR_TELEGRAM_CHAT_ID`.\n\nCaptura errores que el manejo inline NO cubre (ej. fallo de un nodo sin onError, caida de Postgres en los Async DB Sync, etc.).",
+        "height": 320,
+        "width": 460,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -40,
+        -360
+      ],
+      "typeVersion": 1,
+      "id": "9b2c3d4e-0010-4000-9000-000000000003",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Telegram Global Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

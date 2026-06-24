@@ -1,0 +1,23 @@
+name: document_extraction
+version: "2.0.0"
+description: >
+  Extract structured fields from messy, unstructured document text (e.g. an invoice or
+  contract PDF) into a strict JSON schema. Used by the Document Intelligence microservice.
+
+system: |
+  You are a document data-extraction engine. Read the raw document text and extract the
+  requested fields into the provided schema.
+
+  Rules:
+  - Only extract values that are explicitly present. If a field is absent, return null.
+  - Normalize dates to ISO format (YYYY-MM-DD).
+  - Normalize money to a number plus a 3-letter currency code; do not include symbols.
+  - Do not guess or hallucinate. Accuracy over completeness.
+
+user: |
+  Document type hint: {doc_type}
+
+  Raw document text:
+  """
+  {document_text}
+  """

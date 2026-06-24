@@ -1,0 +1,2146 @@
+{
+  "name": "ManoExperta: Vapi Core API (Low Latency)",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Parse Payload').first().json.tool_name }}",
+                    "rightValue": "consultar_manual_rag",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "consultar_manual_rag"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Parse Payload').first().json.tool_name }}",
+                    "rightValue": "gestionar_agenda_db",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "gestionar_agenda_db"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        448
+      ],
+      "id": "d9bf3c8d-e718-4ede-bb48-243821c519fb",
+      "name": "Tool Router"
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "manoexperta-technical-rag-v1",
+          "mode": "list"
+        },
+        "prompt": "=={{ $('Parse Payload').item.json.args.symptoms }}",
+        "topK": 1,
+        "options": {
+          "pineconeNamespace": "manoexperta-technical-rag-v1"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        -240
+      ],
+      "id": "d0c2d7d6-9d3e-4173-84cc-82ed752d95a4",
+      "name": "Search Technical KB",
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "pineconeApi": {
+          "id": "YOUR_PINECONE_CRED_ID",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        288,
+        -80
+      ],
+      "id": "808da6eb-4891-4d3a-93fb-78fbc8c9ac37",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YOUR_GEMINI_CRED_ID",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE calls\nSET\n  incident_state = jsonb_set(COALESCE(incident_state, '{}'::jsonb), '{incident_category}', to_jsonb($2::text), true),\n  status = 'SUCCESS'\nWHERE call_id = $1;",
+        "options": {
+          "queryReplacement": "={{ [$('Parse Payload').item.json.call_id, $('Parse Payload').item.json.args.category] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        864,
+        -240
+      ],
+      "id": "8d80f65c-3111-4b3b-bd9a-eee735a5d7a0",
+      "name": "Async DB Sync (RAG)",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Parse Payload').first().json.args.action }}",
+                    "rightValue": "check",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c399faa1-8fed-4505-91a4-1d7f9956f217"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "check_slots"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Parse Payload').first().json.args.action }}",
+                    "rightValue": "book",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "ed90d11a-ea57-491d-9d04-2bf8cec28871"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "book_appointment"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Parse Payload').first().json.args.action }}",
+                    "rightValue": "lookup",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a1b2c3d4-look-0000-0000-000000000001"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "lookup_appointment"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Parse Payload').first().json.args.action }}",
+                    "rightValue": "cancel",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a1b2c3d4-canc-0000-0000-000000000002"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cancel_appointment"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        608
+      ],
+      "id": "125f5542-57b7-41b8-b471-317bc731d275",
+      "name": "Agenda Action Router"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, full_name, calendar_id, specialty FROM technicians WHERE status = 'available' LIMIT 2;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        544,
+        416
+      ],
+      "id": "d7a1e370-7272-4874-a9f2-04e0b5a2b841",
+      "name": "Fetch Technicians",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Solo filas reales de tecnicos (evita el item de error de 'continueErrorOutput')\nconst techs = $input.all().filter((i) => i.json && i.json.calendar_id);\n\n// Sin tecnicos disponibles: devolvemos lista vacia controlada\nif (techs.length === 0) {\n  return [{ json: { available_slots: [] } }];\n}\n\nconst now = new Date();\nconst pad = (n) => n.toString().padStart(2, '0');\nconst offset = \"-05:00\";\nconst toBogotaISO = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:00:00${offset}`;\n\nconst slots = [];\nif (now.getHours() < 16) {\n  const slotHoy = new Date(now);\n  slotHoy.setHours(now.getHours() + 2);\n  slots.push({\n    date_iso: toBogotaISO(slotHoy),\n    technician_name: techs[0].json.full_name,\n    calendar_id: techs[0].json.calendar_id\n  });\n}\n\nconst slotManana = new Date(now);\nslotManana.setDate(slotManana.getDate() + 1);\nslotManana.setHours(9);\n// Si solo hay un tecnico, reutilizamos el mismo (no rompe con techs[1] undefined)\nconst tech2 = techs[1] || techs[0];\nslots.push({\n  date_iso: toBogotaISO(slotManana),\n  technician_name: tech2.json.full_name,\n  calendar_id: tech2.json.calendar_id\n});\n\nreturn [{ json: { available_slots: slots } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        288
+      ],
+      "id": "11c7ec68-d8d4-46e0-8a2f-ca7d2deba628",
+      "name": "Generate Slots"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Parse Payload').item.json.tool_call_id }}\",\n      \"result\": {\n        \"slots\": {{ JSON.stringify($json.available_slots) }}\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        928,
+        288
+      ],
+      "id": "8501fcd3-2b4a-48ef-9052-c67f3210443b",
+      "name": "Return Slots Data"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $('Fetch Calendar ID').item.json.calendar_id }}",
+          "mode": "id"
+        },
+        "start": "={{ DateTime.fromISO($('Parse Payload').item.json.args.preferred_date).setZone('America/Bogota').toISO() }}",
+        "end": "={{ DateTime.fromISO($('Parse Payload').item.json.args.preferred_date).setZone('America/Bogota').plus({ hours: 1 }).toISO() }}",
+        "additionalFields": {
+          "summary": "=ManoExperta Service | {{ $('Parse Payload').item.json.args.technician_name }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1216,
+        672
+      ],
+      "id": "29442225-fbc7-4f1d-be62-f080efb98deb",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YOUR_GCAL_CRED_ID",
+          "name": "Google Calendar account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE calls\nSET\n  gcal_event_id = $2,\n  technician_id = $3,\n  status = 'COMPLETED'\nWHERE call_id = $1;",
+        "options": {
+          "queryReplacement": "={{ [$('Parse Payload').item.json.call_id, $('Create an event').item.json.id, $('Fetch Calendar ID').item.json.id] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1760,
+        640
+      ],
+      "id": "cb0e05d0-ea81-4423-9f8e-01f3c99927de",
+      "name": "Async DB Sync (Agenda)",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Read the incoming JSON from the Vapi Webhook\nconst payload = $input.first().json.body.message;\nconst toolCall = payload.toolCalls[0];\n\n// Extract arguments bypassing n8n's strict security check\nconst rawArgs = toolCall.function[\"arguments\"];\n\n// Check the data type to avoid the [object Object] parsing error\nlet parsedArgs = {};\nif (typeof rawArgs === 'string') {\n    parsedArgs = JSON.parse(rawArgs || \"{}\");\n} else if (typeof rawArgs === 'object' && rawArgs !== null) {\n    parsedArgs = rawArgs; // Already an object, no need to parse\n}\n\n// Numero del que llama (para reconocer, cancelar o reprogramar citas en re-llamadas)\nconst phone = (payload.call && payload.call.customer && payload.call.customer.number)\n  ? payload.call.customer.number\n  : ((payload.customer && payload.customer.number) ? payload.customer.number : null);\n\n// Return a clean, flat object for the rest of the workflow\nreturn {\n  call_id: payload.call.id,\n  phone: phone,\n  tool_call_id: toolCall.id,\n  tool_name: toolCall.function.name,\n  args: parsedArgs\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        448
+      ],
+      "id": "3574dae4-3d5e-42df-9472-5fff3be1f4bf",
+      "name": "Parse Payload",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, calendar_id FROM technicians WHERE full_name = $1;",
+        "options": {
+          "queryReplacement": "={{ [$('Parse Payload').item.json.args.technician_name] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        544,
+        864
+      ],
+      "id": "64b425ca-f7ce-4cd9-bd0f-1dc15ecd6419",
+      "name": "Fetch Calendar ID",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $json.calendar_id }}",
+          "mode": "id"
+        },
+        "limit": 1,
+        "timeMin": "={{ DateTime.fromISO($('Parse Payload').item.json.args.preferred_date).setZone('America/Bogota').toISO() }}",
+        "timeMax": "={{ DateTime.fromISO($('Parse Payload').item.json.args.preferred_date).setZone('America/Bogota').plus({ hours: 1 }).toISO() }}",
+        "options": {
+          "recurringEventHandling": "expand"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        768,
+        768
+      ],
+      "id": "3a0c4939-1c5e-4ceb-b826-0fd0cc74ca46",
+      "name": "Check Calendar Availability",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YOUR_GCAL_CRED_ID",
+          "name": "Google Calendar account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f0c9b4fc-e444-4afc-ad05-100c1cecc0cd",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        992,
+        720
+      ],
+      "id": "e420681d-783a-416c-a09c-3af4067970ad",
+      "name": "Is Slot Still Available?",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Parse Payload').item.json.tool_call_id }}\",\n      \"result\": {\n        \"status\": \"slot_unavailable\",\n        \"message\": \"El horario solicitado ya esta ocupado por otra cita. NO confirmes la reserva ni digas que quedo agendada. Pide disculpas brevemente y ofrece al usuario otro horario distinto; si acepta, vuelve a invocar gestionar_agenda_db con action book y la nueva fecha.\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1600,
+        1040
+      ],
+      "id": "d7722880-eb41-43ea-87ec-7d7a62da658b",
+      "name": "Return Collision Error"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vapi-tools",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -688,
+        448
+      ],
+      "id": "4dfebbe3-241c-43ce-8dd2-e892611eefc6",
+      "name": "Webhook",
+      "webhookId": "YOUR_VAPI_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Parse Payload').item.json.tool_call_id }}\",\n      \"result\": {\n        \"status\": \"confirmed\",\n        \"confirmation_code\": \"CONF-{{ Math.floor(1000 + Math.random() * 9000) }}\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1584,
+        640
+      ],
+      "id": "ce2e8de9-3448-495e-ad92-29df6534a24c",
+      "name": "Return Booking Success"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Parse Payload').item.json.tool_call_id }}\",\n      \"result\": {\n        \"safety_warning\": \"{{ $json.document.metadata.seguridad }}\",\n        \"solution_steps\": \"{{ $json.document.metadata.solucion }}\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        608,
+        -240
+      ],
+      "id": "0bd41ef1-53d8-435e-8178-b7de069ff0fa",
+      "name": "Return RAG Data"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_id\": \"error_handling\",\n  \"assistant_response\": \"Lo siento, estoy teniendo un pequeño problema para conectar con el sistema de agenda en este momento. ¿Podrías intentar llamarme en unos minutos?\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1584,
+        432
+      ],
+      "id": "53482385-0990-4968-823e-7eecb8862ee9",
+      "name": "Return Fetch Technicians Error"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_id\": \"fetch_calendar_id_error\",\n  \"assistant_response\": \"Disculpa, no logré localizar la agenda del técnico en este momento. Dame un segundo para verificarlo internamente, o si prefieres, ¿puedes indicarme tu nombre para intentar registrar tus datos por otra vía?\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1600,
+        1424
+      ],
+      "id": "3cf15829-0bfa-41f1-acb3-d13e99ce2181",
+      "name": "Return Fetch Calendar ID Error"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_id\": \"check_calendar_availability_error\",\n  \"assistant_response\": \"Disculpa, el sistema de horarios está tardando un poco en responder. Para no hacerte esperar en la línea, ¿me podrías confirmar tu número de teléfono y el día que te vendría mejor para que te devolvamos la llamada con la confirmación?\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1600,
+        1232
+      ],
+      "id": "6beddb89-680e-4dff-af0f-4e271d97e61f",
+      "name": "Return Check Calendar Availability Error"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_id\": \"create_event_error\",\n  \"assistant_response\": \"Tengo una pequeña demora al registrar la confirmación en el sistema, pero ya tengo todos tus datos anotados para este espacio. Voy a pasarlo de inmediato con el equipo para asegurar tu lugar y te enviaremos la confirmación por mensaje de texto en unos minutos. ¿Está bien?\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1600,
+        848
+      ],
+      "id": "fb727869-d872-4722-9cdd-1ffd7d75126d",
+      "name": "Return Create an event Error"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO calls (call_id, status, phone_number)\nVALUES ($1, 'IN_PROGRESS', $2)\nON CONFLICT (call_id) DO UPDATE SET phone_number = COALESCE(EXCLUDED.phone_number, calls.phone_number);",
+        "options": {
+          "queryReplacement": "={{ [$('Parse Payload').item.json.call_id, $('Parse Payload').item.json.phone] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -240,
+        448
+      ],
+      "id": "cd912e8a-e904-4d8d-acc7-7707cc4184b5",
+      "name": "Initialize Call Log",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE calls\nSET\n  status = $2,\n  error_log = $3::jsonb\nWHERE call_id = $1;",
+        "options": {
+          "queryReplacement": "={{ [$('Error Logger Funnel').first().json.call_id, $('Error Logger Funnel').first().json.error_status, JSON.stringify({ message: $('Error Logger Funnel').first().json.error_message, node: $('Error Logger Funnel').first().json.error_node, detail: $('Error Logger Funnel').first().json.error_detail })] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2300,
+        820
+      ],
+      "id": "7fb3b413-5de5-444c-b362-868060d807b3",
+      "name": "Log Error (calls)",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO workflow_logs (call_id, tool_name, node_name, level, status, payload)\nVALUES ($1, $2, $3, 'ERROR', $4, $5::jsonb);",
+        "options": {
+          "queryReplacement": "={{ [($('Error Logger Funnel').first().json.call_id === 'unknown' ? null : $('Error Logger Funnel').first().json.call_id), $('Error Logger Funnel').first().json.tool_name, $('Error Logger Funnel').first().json.error_node, $('Error Logger Funnel').first().json.error_status, JSON.stringify({ message: $('Error Logger Funnel').first().json.error_message, detail: $('Error Logger Funnel').first().json.error_detail })] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2520,
+        820
+      ],
+      "id": "9a1b2c3d-0001-4000-9000-000000000001",
+      "name": "Log Error (workflow_logs)",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        820
+      ],
+      "id": "9a1b2c3d-0001-4000-9000-000000000002",
+      "name": "Error Logger Funnel"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "=ManoExperta - ERROR en el flujo\nEstado: {{ $('Error Logger Funnel').first().json.error_status }}\nNodo: {{ $('Error Logger Funnel').first().json.error_node }}\nTool: {{ $('Error Logger Funnel').first().json.tool_name }}\ncall_id: {{ $('Error Logger Funnel').first().json.call_id }}\nMensaje: {{ $('Error Logger Funnel').first().json.error_message }}\nHora (Bogota): {{ $now.setZone('America/Bogota').toFormat('yyyy-LL-dd HH:mm:ss') }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2740,
+        820
+      ],
+      "id": "9a1b2c3d-0001-4000-9000-000000000003",
+      "name": "Telegram Error Alert",
+      "onError": "continueRegularOutput",
+      "webhookId": "manoexperta-tg-error-inline"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "p1", "name": "error_status", "value": "FAILED_PARSE_PAYLOAD", "type": "string" },
+            { "id": "p2", "name": "error_node", "value": "Parse Payload", "type": "string" },
+            { "id": "p3", "name": "error_message", "value": "No se pudo parsear el payload entrante de Vapi", "type": "string" },
+            { "id": "p4", "name": "error_detail", "value": "={{ JSON.stringify($json) }}", "type": "string" },
+            { "id": "p5", "name": "call_id", "value": "={{ $('Parse Payload').item.json.call_id || 'unknown' }}", "type": "string" },
+            { "id": "p6", "name": "tool_name", "value": "={{ $('Parse Payload').item.json.tool_name || 'unknown' }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -300,
+        700
+      ],
+      "id": "9a1b2c3d-0002-4000-9000-000000000001",
+      "name": "Set Ctx - Parse"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "ut1", "name": "error_status", "value": "UNKNOWN_TOOL", "type": "string" },
+            { "id": "ut2", "name": "error_node", "value": "Tool Router", "type": "string" },
+            { "id": "ut3", "name": "error_message", "value": "=tool_name no reconocido: {{ $('Parse Payload').item.json.tool_name }}", "type": "string" },
+            { "id": "ut4", "name": "error_detail", "value": "={{ JSON.stringify($json) }}", "type": "string" },
+            { "id": "ut5", "name": "call_id", "value": "={{ $('Parse Payload').item.json.call_id }}", "type": "string" },
+            { "id": "ut6", "name": "tool_name", "value": "={{ $('Parse Payload').item.json.tool_name }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        260
+      ],
+      "id": "9a1b2c3d-0002-4000-9000-000000000002",
+      "name": "Set Ctx - Unknown Tool"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "rg1", "name": "error_status", "value": "FAILED_RAG_SEARCH", "type": "string" },
+            { "id": "rg2", "name": "error_node", "value": "Search Technical KB", "type": "string" },
+            { "id": "rg3", "name": "error_message", "value": "Fallo al consultar la base de conocimientos vectorial (Pinecone/Embeddings)", "type": "string" },
+            { "id": "rg4", "name": "error_detail", "value": "={{ JSON.stringify($json) }}", "type": "string" },
+            { "id": "rg5", "name": "call_id", "value": "={{ $('Parse Payload').item.json.call_id }}", "type": "string" },
+            { "id": "rg6", "name": "tool_name", "value": "={{ $('Parse Payload').item.json.tool_name }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        -420
+      ],
+      "id": "9a1b2c3d-0002-4000-9000-000000000003",
+      "name": "Set Ctx - RAG"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "ua1", "name": "error_status", "value": "UNKNOWN_ACTION", "type": "string" },
+            { "id": "ua2", "name": "error_node", "value": "Agenda Action Router", "type": "string" },
+            { "id": "ua3", "name": "error_message", "value": "=action no reconocida: {{ $('Parse Payload').item.json.args.action }}", "type": "string" },
+            { "id": "ua4", "name": "error_detail", "value": "={{ JSON.stringify($json) }}", "type": "string" },
+            { "id": "ua5", "name": "call_id", "value": "={{ $('Parse Payload').item.json.call_id }}", "type": "string" },
+            { "id": "ua6", "name": "tool_name", "value": "={{ $('Parse Payload').item.json.tool_name }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        300,
+        1040
+      ],
+      "id": "9a1b2c3d-0002-4000-9000-000000000004",
+      "name": "Set Ctx - Unknown Action"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "tf1", "name": "error_status", "value": "FAILED_TECH_FETCH", "type": "string" },
+            { "id": "tf2", "name": "error_node", "value": "Fetch Technicians", "type": "string" },
+            { "id": "tf3", "name": "error_message", "value": "Fallo al consultar tecnicos disponibles en la base de datos", "type": "string" },
+            { "id": "tf4", "name": "error_detail", "value": "={{ JSON.stringify($json) }}", "type": "string" },
+            { "id": "tf5", "name": "call_id", "value": "={{ $('Parse Payload').item.json.call_id }}", "type": "string" },
+            { "id": "tf6", "name": "tool_name", "value": "={{ $('Parse Payload').item.json.tool_name }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1360,
+        432
+      ],
+      "id": "9a1b2c3d-0002-4000-9000-000000000005",
+      "name": "Set Ctx - Tech Fetch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "ci1", "name": "error_status", "value": "FAILED_CALENDAR_ID", "type": "string" },
+            { "id": "ci2", "name": "error_node", "value": "Fetch Calendar ID", "type": "string" },
+            { "id": "ci3", "name": "error_message", "value": "Fallo al obtener el calendar_id del tecnico", "type": "string" },
+            { "id": "ci4", "name": "error_detail", "value": "={{ JSON.stringify($json) }}", "type": "string" },
+            { "id": "ci5", "name": "call_id", "value": "={{ $('Parse Payload').item.json.call_id }}", "type": "string" },
+            { "id": "ci6", "name": "tool_name", "value": "={{ $('Parse Payload').item.json.tool_name }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        1424
+      ],
+      "id": "9a1b2c3d-0002-4000-9000-000000000006",
+      "name": "Set Ctx - Calendar ID"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "ca1", "name": "error_status", "value": "FAILED_CALENDAR_CHECK", "type": "string" },
+            { "id": "ca2", "name": "error_node", "value": "Check Calendar Availability", "type": "string" },
+            { "id": "ca3", "name": "error_message", "value": "Fallo al verificar disponibilidad en Google Calendar", "type": "string" },
+            { "id": "ca4", "name": "error_detail", "value": "={{ JSON.stringify($json) }}", "type": "string" },
+            { "id": "ca5", "name": "call_id", "value": "={{ $('Parse Payload').item.json.call_id }}", "type": "string" },
+            { "id": "ca6", "name": "tool_name", "value": "={{ $('Parse Payload').item.json.tool_name }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        1232
+      ],
+      "id": "9a1b2c3d-0002-4000-9000-000000000007",
+      "name": "Set Ctx - Check Avail"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "ce1", "name": "error_status", "value": "FAILED_BOOKING", "type": "string" },
+            { "id": "ce2", "name": "error_node", "value": "Create an event", "type": "string" },
+            { "id": "ce3", "name": "error_message", "value": "Fallo al crear el evento en Google Calendar", "type": "string" },
+            { "id": "ce4", "name": "error_detail", "value": "={{ JSON.stringify($json) }}", "type": "string" },
+            { "id": "ce5", "name": "call_id", "value": "={{ $('Parse Payload').item.json.call_id }}", "type": "string" },
+            { "id": "ce6", "name": "tool_name", "value": "={{ $('Parse Payload').item.json.tool_name }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        848
+      ],
+      "id": "9a1b2c3d-0002-4000-9000-000000000008",
+      "name": "Set Ctx - Create Event"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "co1", "name": "error_status", "value": "BOOKING_COLLISION", "type": "string" },
+            { "id": "co2", "name": "error_node", "value": "Is Slot Still Available?", "type": "string" },
+            { "id": "co3", "name": "error_message", "value": "El usuario intento agendar en un slot ya ocupado", "type": "string" },
+            { "id": "co4", "name": "error_detail", "value": "={{ JSON.stringify($json) }}", "type": "string" },
+            { "id": "co5", "name": "call_id", "value": "={{ $('Parse Payload').item.json.call_id }}", "type": "string" },
+            { "id": "co6", "name": "tool_name", "value": "={{ $('Parse Payload').item.json.tool_name }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        1040
+      ],
+      "id": "9a1b2c3d-0002-4000-9000-000000000009",
+      "name": "Set Ctx - Collision"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_id\": \"parse_payload_error\",\n  \"assistant_response\": \"Disculpa, tuve un problema al procesar tu solicitud. Dame un momento e intenta de nuevo, por favor.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -80,
+        700
+      ],
+      "id": "9a1b2c3d-0003-4000-9000-000000000001",
+      "name": "Return Parse Error"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_id\": \"unknown_tool_error\",\n  \"assistant_response\": \"Disculpa, no reconoci esa solicitud. Me puedes repetir que necesitas, por favor?\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        400,
+        260
+      ],
+      "id": "9a1b2c3d-0003-4000-9000-000000000002",
+      "name": "Return Unknown Tool Error"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_id\": \"rag_search_error\",\n  \"assistant_response\": \"Disculpa, estoy teniendo problemas para consultar el manual tecnico en este momento. Puedo tomar tus datos para que un tecnico te contacte?\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        700,
+        -420
+      ],
+      "id": "9a1b2c3d-0003-4000-9000-000000000003",
+      "name": "Return RAG Error"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_id\": \"unknown_action_error\",\n  \"assistant_response\": \"Disculpa, no entendi si querias consultar disponibilidad o agendar. Me lo confirmas, por favor?\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        500,
+        1040
+      ],
+      "id": "9a1b2c3d-0003-4000-9000-000000000004",
+      "name": "Return Unknown Action Error"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH ins AS (\n  INSERT INTO appointment_slots (technician_id, slot_start, call_id)\n  VALUES ($1, $2::timestamptz, $3)\n  ON CONFLICT (technician_id, slot_start) DO NOTHING\n  RETURNING id\n)\nSELECT EXISTS (SELECT 1 FROM ins) AS reserved;",
+        "options": {
+          "queryReplacement": "={{ [$('Fetch Calendar ID').item.json.id, $('Parse Payload').item.json.args.preferred_date, $('Parse Payload').item.json.call_id] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        700,
+        980
+      ],
+      "id": "9a1b2c3d-0004-4000-9000-000000000001",
+      "name": "Reserve Slot",
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "res-cond-1",
+              "leftValue": "={{ $json.reserved }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        880,
+        980
+      ],
+      "id": "9a1b2c3d-0004-4000-9000-000000000002",
+      "name": "IF Reserved?"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM appointment_slots\nWHERE technician_id = $1 AND slot_start = $2::timestamptz AND gcal_event_id IS NULL;",
+        "options": {
+          "queryReplacement": "={{ [$('Fetch Calendar ID').item.json.id, $('Parse Payload').item.json.args.preferred_date] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1400,
+        760
+      ],
+      "id": "9a1b2c3d-0004-4000-9000-000000000003",
+      "name": "Release Slot (Create Error)",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM appointment_slots\nWHERE technician_id = $1 AND slot_start = $2::timestamptz AND gcal_event_id IS NULL;",
+        "options": {
+          "queryReplacement": "={{ [$('Fetch Calendar ID').item.json.id, $('Parse Payload').item.json.args.preferred_date] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1180,
+        1180
+      ],
+      "id": "9a1b2c3d-0004-4000-9000-000000000004",
+      "name": "Release Slot (Collision)",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM appointment_slots\nWHERE technician_id = $1 AND slot_start = $2::timestamptz AND gcal_event_id IS NULL;",
+        "options": {
+          "queryReplacement": "={{ [$('Fetch Calendar ID').item.json.id, $('Parse Payload').item.json.args.preferred_date] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1180,
+        1340
+      ],
+      "id": "9a1b2c3d-0004-4000-9000-000000000005",
+      "name": "Release Slot (Check Error)",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "rs1", "name": "error_status", "value": "FAILED_RESERVE", "type": "string" },
+            { "id": "rs2", "name": "error_node", "value": "Reserve Slot", "type": "string" },
+            { "id": "rs3", "name": "error_message", "value": "Fallo al reservar el slot en la base de datos (candado anti doble-reserva)", "type": "string" },
+            { "id": "rs4", "name": "error_detail", "value": "={{ JSON.stringify($json) }}", "type": "string" },
+            { "id": "rs5", "name": "call_id", "value": "={{ $('Parse Payload').item.json.call_id }}", "type": "string" },
+            { "id": "rs6", "name": "tool_name", "value": "={{ $('Parse Payload').item.json.tool_name }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1060,
+        980
+      ],
+      "id": "9a1b2c3d-0004-4000-9000-000000000006",
+      "name": "Set Ctx - Reserve"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_id\": \"reserve_error\",\n  \"assistant_response\": \"Disculpe, el sistema de agenda esta procesando varias solicitudes. Para no retenerle, tomo nota de su preferencia y un asesor le confirma por WhatsApp en unos minutos.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1260,
+        980
+      ],
+      "id": "9a1b2c3d-0004-4000-9000-000000000007",
+      "name": "Return Reserve Error"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE appointment_slots\nSET gcal_event_id = $3\nWHERE technician_id = $1 AND slot_start = $2::timestamptz;",
+        "options": {
+          "queryReplacement": "={{ [$('Fetch Calendar ID').item.json.id, $('Parse Payload').item.json.args.preferred_date, $('Create an event').item.json.id] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1980,
+        640
+      ],
+      "id": "9a1b2c3d-0004-4000-9000-000000000008",
+      "name": "Confirm Slot",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT c.gcal_event_id, t.full_name AS technician_name, a.slot_start\nFROM calls c\nLEFT JOIN technicians t ON t.id = c.technician_id\nLEFT JOIN appointment_slots a ON a.gcal_event_id = c.gcal_event_id\nWHERE c.phone_number = $1\n  AND c.status = 'COMPLETED'\n  AND c.gcal_event_id IS NOT NULL\nORDER BY c.created_at DESC\nLIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ [$('Parse Payload').item.json.phone] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        620,
+        1700
+      ],
+      "id": "9a1b2c3d-0005-4000-9000-000000000001",
+      "name": "Lookup Appointment",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Parse Payload').item.json.tool_call_id }}\",\n      \"result\": {\n        \"found\": {{ $json.gcal_event_id ? true : false }},\n        \"technician_name\": \"{{ $json.technician_name || '' }}\",\n        \"slot_start\": \"{{ $json.slot_start || '' }}\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        860,
+        1700
+      ],
+      "id": "9a1b2c3d-0005-4000-9000-000000000002",
+      "name": "Return Lookup"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT c.call_id, c.gcal_event_id, c.technician_id, t.calendar_id\nFROM calls c\nLEFT JOIN technicians t ON t.id = c.technician_id\nWHERE c.phone_number = $1\n  AND c.status = 'COMPLETED'\n  AND c.gcal_event_id IS NOT NULL\n  AND c.call_id <> $2\nORDER BY c.created_at DESC\nLIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ [$('Parse Payload').item.json.phone, $('Parse Payload').item.json.call_id] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        620,
+        1880
+      ],
+      "id": "9a1b2c3d-0005-4000-9000-000000000003",
+      "name": "Lookup For Cancel",
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cancel-cond-1",
+              "leftValue": "={{ $json.gcal_event_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        840,
+        1880
+      ],
+      "id": "9a1b2c3d-0005-4000-9000-000000000004",
+      "name": "IF Has Appt to Cancel?"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $('Lookup For Cancel').item.json.calendar_id }}",
+          "mode": "id"
+        },
+        "eventId": "={{ $('Lookup For Cancel').item.json.gcal_event_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1060,
+        1820
+      ],
+      "id": "9a1b2c3d-0005-4000-9000-000000000005",
+      "name": "Delete Calendar Event",
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YOUR_GCAL_CRED_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM appointment_slots WHERE gcal_event_id = $1;\nUPDATE calls SET status = 'CANCELLED' WHERE gcal_event_id = $1;",
+        "options": {
+          "queryReplacement": "={{ [$('Lookup For Cancel').item.json.gcal_event_id] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1280,
+        1820
+      ],
+      "id": "9a1b2c3d-0005-4000-9000-000000000006",
+      "name": "Finalize Cancel",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "postgres": {
+          "id": "YOUR_POSTGRES_CRED_ID",
+          "name": "ManoExperta-Core-DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Parse Payload').item.json.tool_call_id }}\",\n      \"result\": {\n        \"status\": \"cancelled\",\n        \"message\": \"La cita fue cancelada correctamente.\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1500,
+        1820
+      ],
+      "id": "9a1b2c3d-0005-4000-9000-000000000007",
+      "name": "Return Cancel Success"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Parse Payload').item.json.tool_call_id }}\",\n      \"result\": {\n        \"status\": \"not_found\",\n        \"message\": \"No encontre una cita activa asociada a este numero. Confirma los datos del cliente o agenda una nueva.\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1060,
+        1980
+      ],
+      "id": "9a1b2c3d-0005-4000-9000-000000000008",
+      "name": "Return No Appointment"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "cx1", "name": "error_status", "value": "FAILED_CANCEL", "type": "string" },
+            { "id": "cx2", "name": "error_node", "value": "Delete Calendar Event", "type": "string" },
+            { "id": "cx3", "name": "error_message", "value": "Fallo al cancelar la cita (Google Calendar o base de datos)", "type": "string" },
+            { "id": "cx4", "name": "error_detail", "value": "={{ JSON.stringify($json) }}", "type": "string" },
+            { "id": "cx5", "name": "call_id", "value": "={{ $('Parse Payload').item.json.call_id }}", "type": "string" },
+            { "id": "cx6", "name": "tool_name", "value": "={{ $('Parse Payload').item.json.tool_name }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        2000
+      ],
+      "id": "9a1b2c3d-0005-4000-9000-000000000009",
+      "name": "Set Ctx - Cancel"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_id\": \"cancel_error\",\n  \"assistant_response\": \"Disculpe, tuve un problema al cancelar la cita en este momento. Tomo nota y un asesor lo confirma en breve por WhatsApp.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1500,
+        2000
+      ],
+      "id": "9a1b2c3d-0005-4000-9000-000000000010",
+      "name": "Return Cancel Error"
+    },
+    {
+      "parameters": {
+        "content": "# [05] CITAS EXISTENTES (RE-LLAMADAS, CANCELAR, REPROGRAMAR)\n## Identifica al cliente por su numero entrante. `lookup` devuelve su cita activa (para reconocerlo). `cancel` borra el evento de Google Calendar, libera el slot y marca la llamada como CANCELLED. La busqueda de cancelacion excluye la cita creada en la llamada actual, de modo que 'reprogramar' = el agente agenda la nueva (book) y luego cancela la anterior (cancel) sin riesgo de quedarse sin cita.",
+        "height": 540,
+        "width": 1180,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        456,
+        1620
+      ],
+      "typeVersion": 1,
+      "id": "9a1b2c3d-0006-4000-9000-000000000001",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "# [01] RECEPCIÓN Y ENRUTAMIENTO\n\n## Captura el webhook de Vapi, inicializa el registro de la llamada en Supabase con estado IN_PROGRESS y deriva el flujo según la intención del usuario (Soporte Técnico o Agenda).\n\n",
+        "height": 1104,
+        "width": 1520,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -816,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "ff1f431f-c354-4c25-aa3d-119f5bd53fa2",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# [02] CONSULTAS TÉCNICAS (RAG)\n## Genera embeddings con Gemini para consultar la base de conocimientos vectorial. Devuelve la respuesta técnica a Vapi y actualiza el estado de la llamada a SUCCESS.",
+        "height": 600,
+        "width": 1040,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        176,
+        -520
+      ],
+      "typeVersion": 1,
+      "id": "51f1b031-5a4e-4776-b944-d515e168d2c8",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# [03] GESTIÓN DE HORARIOS Y RESERVAS\n## Consulta técnicos activos, genera bloques de tiempo disponibles y verifica colisiones en Google Calendar antes de confirmar e insertar la nueva cita.",
+        "height": 1400,
+        "width": 1160,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        456,
+        152
+      ],
+      "typeVersion": 1,
+      "id": "ae6bb10a-63a1-49a7-8499-64762f652069",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# [04] CAPA DE TOLERANCIA A FALLOS Y AUDITORÍA\n## Captura cualquier error de API o colisión de negocio, entrega respuestas controladas a Vapi para mantener la llamada viva y registra las métricas/errores finales en Supabase.\n",
+        "height": 1220,
+        "width": 1500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1512,
+        360
+      ],
+      "typeVersion": 1,
+      "id": "5223ac07-76c3-4f45-b855-30ee55f602bf",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Tool Router": {
+      "main": [
+        [
+          {
+            "node": "Search Technical KB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Agenda Action Router",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Ctx - Unknown Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Search Technical KB",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agenda Action Router": {
+      "main": [
+        [
+          {
+            "node": "Fetch Technicians",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch Calendar ID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Lookup Appointment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Lookup For Cancel",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Ctx - Unknown Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Technicians": {
+      "main": [
+        [
+          {
+            "node": "Generate Slots",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Ctx - Tech Fetch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Slots": {
+      "main": [
+        [
+          {
+            "node": "Return Slots Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event": {
+      "main": [
+        [
+          {
+            "node": "Return Booking Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Release Slot (Create Error)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Technical KB": {
+      "main": [
+        [
+          {
+            "node": "Return RAG Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Ctx - RAG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Payload": {
+      "main": [
+        [
+          {
+            "node": "Initialize Call Log",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Ctx - Parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Calendar ID": {
+      "main": [
+        [
+          {
+            "node": "Reserve Slot",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Ctx - Calendar ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Calendar Availability": {
+      "main": [
+        [
+          {
+            "node": "Is Slot Still Available?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Release Slot (Check Error)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Slot Still Available?": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Release Slot (Collision)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Booking Success": {
+      "main": [
+        [
+          {
+            "node": "Async DB Sync (Agenda)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return RAG Data": {
+      "main": [
+        [
+          {
+            "node": "Async DB Sync (RAG)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Call Log": {
+      "main": [
+        [
+          {
+            "node": "Tool Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ctx - Parse": {
+      "main": [
+        [
+          {
+            "node": "Return Parse Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ctx - Unknown Tool": {
+      "main": [
+        [
+          {
+            "node": "Return Unknown Tool Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ctx - RAG": {
+      "main": [
+        [
+          {
+            "node": "Return RAG Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ctx - Unknown Action": {
+      "main": [
+        [
+          {
+            "node": "Return Unknown Action Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ctx - Tech Fetch": {
+      "main": [
+        [
+          {
+            "node": "Return Fetch Technicians Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ctx - Calendar ID": {
+      "main": [
+        [
+          {
+            "node": "Return Fetch Calendar ID Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ctx - Check Avail": {
+      "main": [
+        [
+          {
+            "node": "Return Check Calendar Availability Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ctx - Create Event": {
+      "main": [
+        [
+          {
+            "node": "Return Create an event Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ctx - Collision": {
+      "main": [
+        [
+          {
+            "node": "Return Collision Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Parse Error": {
+      "main": [
+        [
+          {
+            "node": "Error Logger Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Unknown Tool Error": {
+      "main": [
+        [
+          {
+            "node": "Error Logger Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return RAG Error": {
+      "main": [
+        [
+          {
+            "node": "Error Logger Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Unknown Action Error": {
+      "main": [
+        [
+          {
+            "node": "Error Logger Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Fetch Technicians Error": {
+      "main": [
+        [
+          {
+            "node": "Error Logger Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Fetch Calendar ID Error": {
+      "main": [
+        [
+          {
+            "node": "Error Logger Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Check Calendar Availability Error": {
+      "main": [
+        [
+          {
+            "node": "Error Logger Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Collision Error": {
+      "main": [
+        [
+          {
+            "node": "Error Logger Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Create an event Error": {
+      "main": [
+        [
+          {
+            "node": "Error Logger Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Logger Funnel": {
+      "main": [
+        [
+          {
+            "node": "Log Error (calls)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Error (calls)": {
+      "main": [
+        [
+          {
+            "node": "Log Error (workflow_logs)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Error (workflow_logs)": {
+      "main": [
+        [
+          {
+            "node": "Telegram Error Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reserve Slot": {
+      "main": [
+        [
+          {
+            "node": "IF Reserved?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Ctx - Reserve",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Reserved?": {
+      "main": [
+        [
+          {
+            "node": "Check Calendar Availability",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Ctx - Collision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Release Slot (Create Error)": {
+      "main": [
+        [
+          {
+            "node": "Set Ctx - Create Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Release Slot (Collision)": {
+      "main": [
+        [
+          {
+            "node": "Set Ctx - Collision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Release Slot (Check Error)": {
+      "main": [
+        [
+          {
+            "node": "Set Ctx - Check Avail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ctx - Reserve": {
+      "main": [
+        [
+          {
+            "node": "Return Reserve Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Reserve Error": {
+      "main": [
+        [
+          {
+            "node": "Error Logger Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Async DB Sync (Agenda)": {
+      "main": [
+        [
+          {
+            "node": "Confirm Slot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup Appointment": {
+      "main": [
+        [
+          {
+            "node": "Return Lookup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup For Cancel": {
+      "main": [
+        [
+          {
+            "node": "IF Has Appt to Cancel?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Ctx - Cancel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Has Appt to Cancel?": {
+      "main": [
+        [
+          {
+            "node": "Delete Calendar Event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return No Appointment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Calendar Event": {
+      "main": [
+        [
+          {
+            "node": "Finalize Cancel",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Ctx - Cancel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finalize Cancel": {
+      "main": [
+        [
+          {
+            "node": "Return Cancel Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ctx - Cancel": {
+      "main": [
+        [
+          {
+            "node": "Return Cancel Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Cancel Error": {
+      "main": [
+        [
+          {
+            "node": "Error Logger Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}

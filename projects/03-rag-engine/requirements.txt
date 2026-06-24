@@ -1,0 +1,8 @@
+# Project 3 - RAG engine
+# Install the shared core in editable mode first:  pip install -e ../../shared
+langchain-text-splitters>=0.3,<0.4
+pytest>=8.0,<9
+
+# Optional: only needed to expose the pipeline over HTTP (rag_engine.serve)
+# fastapi>=0.111,<1
+# uvicorn[standard]>=0.30,<1
