@@ -1,0 +1,52 @@
+name: Eval — Ecommerce Swarm
+
+on:
+  pull_request:
+    paths:
+      - "projects/05-ecommerce-swarm/**"
+      - ".github/workflows/eval.yml"
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/05-ecommerce-swarm
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: projects/05-ecommerce-swarm/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run evaluation (quick + CI gates)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+          LANGSMITH_PROJECT: ecommerce-eval
+        run: python eval/run_eval.py --quick --report --ci
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: projects/05-ecommerce-swarm/eval/reports/eval_report_latest.html
+          if-no-files-found: warn
+
+      - name: Upload metrics JSON
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-metrics
+          path: projects/05-ecommerce-swarm/eval/reports/last_metrics.json
+          if-no-files-found: warn

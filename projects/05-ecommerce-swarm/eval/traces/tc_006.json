@@ -1,0 +1,21 @@
+{
+  "run_id": "tc_006",
+  "nodes": [
+    "classify_intent",
+    "rag_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "search_knowledge_base",
+      "params": {
+        "query": "Cliente: ¿A partir de cuánto es el envío gratis?"
+      }
+    }
+  ],
+  "latency_ms": 11.721200000010867,
+  "outputs": {
+    "response": "*Información encontrada:*\nEnviamos a *Pasto* en 6-8 días hábiles vía Coordinadora/Servientrega.\n- Compras desde $150.000 COP: envío GRATIS\n- Pasto: tarifa $12.000 COP"
+  }
+}

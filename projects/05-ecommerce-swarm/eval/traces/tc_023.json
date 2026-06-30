@@ -1,0 +1,21 @@
+{
+  "run_id": "tc_023",
+  "nodes": [
+    "classify_intent",
+    "customers_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "get_customer_by_phone",
+      "params": {
+        "phone": "+573001234567"
+      }
+    }
+  ],
+  "latency_ms": 9.689200000138953,
+  "outputs": {
+    "response": "*Cliente:* Juan Pérez\nEmail: juan.perez@email.com\nID de cliente: 5001"
+  }
+}

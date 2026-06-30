@@ -1,0 +1,13 @@
+{
+  "run_id": "tc_029",
+  "nodes": [
+    "classify_intent",
+    "escalation_node",
+    "format_response"
+  ],
+  "tools": [],
+  "latency_ms": 19.19880000014018,
+  "outputs": {
+    "response": "Escalé tu caso. Un asesor te contactará en 24h hábiles."
+  }
+}

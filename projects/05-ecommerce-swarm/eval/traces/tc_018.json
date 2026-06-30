@@ -1,0 +1,22 @@
+{
+  "run_id": "tc_018",
+  "nodes": [
+    "classify_intent",
+    "orders_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "get_order_by_number",
+      "params": {
+        "order_number": "#1042",
+        "customer_phone": "+573001234567"
+      }
+    }
+  ],
+  "latency_ms": 11.505400000260124,
+  "outputs": {
+    "response": "*Pedido #1042*\nTotal: $899.000 COP\nEstado envío: Despachado\nRastreo: Servientrega: 7348291028374\nID interno: 9001"
+  }
+}

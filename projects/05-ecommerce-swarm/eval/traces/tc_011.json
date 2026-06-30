@@ -1,0 +1,23 @@
+{
+  "run_id": "tc_011",
+  "nodes": [
+    "classify_intent",
+    "sales_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "search_products",
+      "params": {
+        "query": "productos",
+        "max_price": null,
+        "category": "Audio"
+      }
+    }
+  ],
+  "latency_ms": 11.68469999993249,
+  "outputs": {
+    "response": "*Resultados para \"productos\"*\n\n- *Audífonos Sony WH-1000XM5* — $899.000 COP (Disponible) | ID: 7001\n- *Samsung Galaxy Buds2 Pro* — $549.000 COP (Disponible) | ID: 7002\n- *Apple AirPods Pro (2.ª gen)* — $999.000 COP (Agotado) | ID: 7003"
+  }
+}

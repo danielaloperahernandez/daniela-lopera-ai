@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ecommerce Swarm — Eval Report</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 2rem; background: #f8fafc; color: #1e293b; }
+    h1 { color: #0f172a; }
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .metric { background: #fff; border-radius: 8px; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .metric .value { font-size: 1.8rem; font-weight: 700; }
+    .green { border-left: 4px solid #22c55e; }
+    .yellow { border-left: 4px solid #eab308; }
+    .red { border-left: 4px solid #ef4444; }
+    table { width: 100%; border-collapse: collapse; background: #fff; margin: 1rem 0; font-size: 0.9rem; }
+    th, td { padding: 0.6rem 0.8rem; border-bottom: 1px solid #e2e8f0; text-align: left; }
+    th { background: #f1f5f9; }
+    .pass { color: #16a34a; font-weight: 600; }
+    .fail { color: #dc2626; font-weight: 600; }
+    .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 900px) { .charts { grid-template-columns: 1fr; } }
+    section { margin: 2rem 0; }
+    .meta { color: #64748b; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <h1>Ecommerce Swarm — Informe de Evaluación</h1>
+  <p class="meta">Generado: {{ generated_at }} | Casos: {{ total_cases }} | Modo: {{ mode }}</p>
+
+  <section>
+    <h2>Resumen ejecutivo</h2>
+    <div class="metrics">
+      {% for m in metrics_summary %}
+      <div class="metric {{ m.status }}">
+        <div>{{ m.label }}</div>
+        <div class="value">{{ m.value }}</div>
+        <div class="meta">Umbral: {{ m.threshold }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="charts">
+    <div id="bar-category"></div>
+    <div id="radar-metrics"></div>
+  </section>
+
+  <section>
+    <h2>Resultados por caso</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Categoría</th><th>Routing</th><th>Tools</th><th>Judge</th><th>Halluc.</th><th>Latencia ms</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in case_rows %}
+        <tr>
+          <td>{{ row.id }}</td>
+          <td>{{ row.category }}</td>
+          <td class="{{ 'pass' if row.routing_pass else 'fail' }}">{{ 'PASS' if row.routing_pass else 'FAIL' }}</td>
+          <td>{{ row.tool_score }}</td>
+          <td>{{ row.judge_score }}</td>
+          <td>{{ row.hallucination_rate }}</td>
+          <td>{{ row.latency_ms }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  {% if failures %}
+  <section>
+    <h2>Casos fallidos — feedback del juez</h2>
+    {% for f in failures %}
+    <div class="metric red" style="margin-bottom: 0.8rem;">
+      <strong>{{ f.case_id }}</strong> ({{ f.category }}) — score {{ f.total }}<br>
+      <span class="meta">{{ f.feedback }}</span>
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if edge_cases %}
+  <section>
+    <h2>Casos adversariales</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Descripción</th><th>Resultado</th><th>Issues</th></tr></thead>
+      <tbody>
+        {% for e in edge_cases %}
+        <tr>
+          <td>{{ e.case_id }}</td>
+          <td>{{ e.description }}</td>
+          <td class="{{ 'pass' if e.passed else 'fail' }}">{{ 'PASS' if e.passed else 'FAIL' }}</td>
+          <td>{{ e.issues | join('; ') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% endif %}
+
+  <script>
+    Plotly.newPlot('bar-category', {{ bar_chart_json | safe }});
+    Plotly.newPlot('radar-metrics', {{ radar_chart_json | safe }});
+  </script>
+</body>
+</html>

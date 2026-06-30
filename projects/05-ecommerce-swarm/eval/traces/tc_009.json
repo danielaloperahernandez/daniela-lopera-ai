@@ -1,0 +1,23 @@
+{
+  "run_id": "tc_009",
+  "nodes": [
+    "classify_intent",
+    "sales_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "search_products",
+      "params": {
+        "query": "Sony audífonos",
+        "max_price": null,
+        "category": null
+      }
+    }
+  ],
+  "latency_ms": 18.900699999903736,
+  "outputs": {
+    "response": "*Resultados para \"Sony audífonos\"*\n\n- *Audífonos Sony WH-1000XM5* — $899.000 COP (Disponible) | ID: 7001"
+  }
+}

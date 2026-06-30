@@ -1,0 +1,21 @@
+{
+  "run_id": "tc_003",
+  "nodes": [
+    "classify_intent",
+    "rag_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "search_knowledge_base",
+      "params": {
+        "query": "Cliente: ¿Qué garantía tienen los productos electrónicos?"
+      }
+    }
+  ],
+  "latency_ms": 9.570600000188278,
+  "outputs": {
+    "response": "*Información encontrada:*\nElectrónicos: *12 meses* de garantía por defectos de fábrica."
+  }
+}

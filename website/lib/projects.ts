@@ -128,6 +128,42 @@ export const projects: Project[] = [
     demoNote: "Demo: a call that gives a safe tip, books a visit, then cancels it on a callback.",
     image: "/diagrams/manoexperta-voice-flow.png",
   },
+  {
+    slug: "ecommerce-swarm",
+    number: "05",
+    title: "Ecommerce Swarm",
+    kind: "Multi-Agent Python - WhatsApp",
+    summary:
+      "LangGraph orchestrates a swarm of specialized Gemini agents for Shopify customer support over WhatsApp, with RAG, order lookup, refunds, and human escalation.",
+    problem:
+      "E-commerce support mixes FAQ questions with sensitive order and refund operations that require identity verification. A single LLM prompt can't route safely across catalog search, order lookup, and policy answers.",
+    proves:
+      "Production multi-agent architecture: LangGraph state machine, specialized tool-using agents, response validation with retry/escalation, and WhatsApp webhook security.",
+    architecture: [
+      "WhatsApp webhook hits FastAPI with signature validation + Redis idempotency/rate limits",
+      "classify_intent routes to rag, sales, orders, customers, greeting, or escalation nodes",
+      "Each specialized node runs a Gemini ReAct agent with Shopify or ChromaDB tools",
+      "response_validator checks answer quality; max 2 retries then forced human escalation",
+      "format_response adapts output for WhatsApp formatting before Cloud API send",
+    ],
+    stack: [
+      "LangGraph",
+      "Gemini 1.5 Pro",
+      "FastAPI",
+      "Shopify Admin API",
+      "ChromaDB",
+      "Redis",
+      "WhatsApp Cloud API",
+    ],
+    highlights: [
+      "Admin API REST for orders, customers, and refunds (not Storefront)",
+      "Phone validation before exposing sensitive order data",
+      "X-Hub-Signature-256, idempotency keys, sliding-window rate limits",
+      "Validator loop with automatic escalation after 2 failed attempts",
+    ],
+    repoPath: "projects/05-ecommerce-swarm",
+    demoNote: "Demo: FAQ from RAG, product search, order status with phone check, refund escalation.",
+  },
 ];
 
 export function getProject(slug: string): Project | undefined {

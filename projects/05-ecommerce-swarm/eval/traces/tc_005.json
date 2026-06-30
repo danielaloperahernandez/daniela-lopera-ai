@@ -1,0 +1,21 @@
+{
+  "run_id": "tc_005",
+  "nodes": [
+    "classify_intent",
+    "rag_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "search_knowledge_base",
+      "params": {
+        "query": "Cliente: ¿Aceptan PSE o Nequi?"
+      }
+    }
+  ],
+  "latency_ms": 10.932600000160164,
+  "outputs": {
+    "response": "*Información encontrada:*\nAceptamos PSE, Nequi, Daviplata, Bancolombia y tarjetas Visa/Mastercard."
+  }
+}

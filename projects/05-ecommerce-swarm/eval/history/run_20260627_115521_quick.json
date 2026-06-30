@@ -1,0 +1,747 @@
+{
+  "run_id": "run_20260627_115521_quick",
+  "timestamp": "2026-06-27T11:55:21.093299+00:00",
+  "mode": "quick",
+  "metrics": {
+    "routing_accuracy": 1.0,
+    "tool_precision": 0.991,
+    "avg_judge_score": 10.0,
+    "hallucination_rate": 0.2,
+    "resolution_rate": 1.0,
+    "latency_p95_ms": 11.6,
+    "category_accuracy": {
+      "rag": 1.0,
+      "ventas": 1.0,
+      "pedidos": 1.0,
+      "clientes": 1.0,
+      "reembolsos": 1.0,
+      "escalada": 1.0
+    },
+    "total_cases": 10
+  },
+  "cases": {
+    "tc_001": {
+      "routing_pass": true,
+      "tool_pass": true,
+      "response_pass": true,
+      "overall_pass": true,
+      "category": "rag"
+    },
+    "tc_008": {
+      "routing_pass": true,
+      "tool_pass": true,
+      "response_pass": true,
+      "overall_pass": true,
+      "category": "rag"
+    },
+    "tc_009": {
+      "routing_pass": true,
+      "tool_pass": true,
+      "response_pass": true,
+      "overall_pass": true,
+      "category": "ventas"
+    },
+    "tc_013": {
+      "routing_pass": true,
+      "tool_pass": true,
+      "response_pass": true,
+      "overall_pass": true,
+      "category": "ventas"
+    },
+    "tc_014": {
+      "routing_pass": true,
+      "tool_pass": true,
+      "response_pass": true,
+      "overall_pass": true,
+      "category": "ventas"
+    },
+    "tc_016": {
+      "routing_pass": true,
+      "tool_pass": true,
+      "response_pass": true,
+      "overall_pass": true,
+      "category": "pedidos"
+    },
+    "tc_022": {
+      "routing_pass": true,
+      "tool_pass": true,
+      "response_pass": true,
+      "overall_pass": true,
+      "category": "clientes"
+    },
+    "tc_025": {
+      "routing_pass": true,
+      "tool_pass": true,
+      "response_pass": true,
+      "overall_pass": true,
+      "category": "clientes"
+    },
+    "tc_026": {
+      "routing_pass": true,
+      "tool_pass": true,
+      "response_pass": true,
+      "overall_pass": true,
+      "category": "reembolsos"
+    },
+    "tc_029": {
+      "routing_pass": true,
+      "tool_pass": true,
+      "response_pass": true,
+      "overall_pass": true,
+      "category": "escalada"
+    }
+  },
+  "results": {
+    "routing": [
+      {
+        "case_id": "tc_001",
+        "category": "rag",
+        "difficulty": "easy",
+        "passed": true,
+        "expected": "rag_node",
+        "actual": "rag_node",
+        "confidence": 1.0,
+        "nodes_visited": [
+          "classify_intent",
+          "rag_node",
+          "response_validator",
+          "format_response"
+        ]
+      },
+      {
+        "case_id": "tc_008",
+        "category": "rag",
+        "difficulty": "hard",
+        "passed": true,
+        "expected": "rag_node",
+        "actual": "rag_node",
+        "confidence": 1.0,
+        "nodes_visited": [
+          "classify_intent",
+          "rag_node",
+          "response_validator",
+          "format_response"
+        ]
+      },
+      {
+        "case_id": "tc_009",
+        "category": "ventas",
+        "difficulty": "easy",
+        "passed": true,
+        "expected": "sales_node",
+        "actual": "sales_node",
+        "confidence": 1.0,
+        "nodes_visited": [
+          "classify_intent",
+          "sales_node",
+          "response_validator",
+          "format_response"
+        ]
+      },
+      {
+        "case_id": "tc_013",
+        "category": "ventas",
+        "difficulty": "hard",
+        "passed": true,
+        "expected": "sales_node",
+        "actual": "sales_node",
+        "confidence": 1.0,
+        "nodes_visited": [
+          "classify_intent",
+          "sales_node",
+          "response_validator",
+          "format_response"
+        ]
+      },
+      {
+        "case_id": "tc_014",
+        "category": "ventas",
+        "difficulty": "hard",
+        "passed": true,
+        "expected": "sales_node",
+        "actual": "sales_node",
+        "confidence": 1.0,
+        "nodes_visited": [
+          "classify_intent",
+          "sales_node",
+          "response_validator",
+          "format_response"
+        ]
+      },
+      {
+        "case_id": "tc_016",
+        "category": "pedidos",
+        "difficulty": "easy",
+        "passed": true,
+        "expected": "orders_node",
+        "actual": "orders_node",
+        "confidence": 1.0,
+        "nodes_visited": [
+          "classify_intent",
+          "orders_node",
+          "response_validator",
+          "format_response"
+        ]
+      },
+      {
+        "case_id": "tc_022",
+        "category": "clientes",
+        "difficulty": "easy",
+        "passed": true,
+        "expected": "customers_node",
+        "actual": "customers_node",
+        "confidence": 1.0,
+        "nodes_visited": [
+          "classify_intent",
+          "customers_node",
+          "response_validator",
+          "format_response"
+        ]
+      },
+      {
+        "case_id": "tc_025",
+        "category": "clientes",
+        "difficulty": "hard",
+        "passed": true,
+        "expected": "customers_node",
+        "actual": "customers_node",
+        "confidence": 1.0,
+        "nodes_visited": [
+          "classify_intent",
+          "customers_node",
+          "response_validator",
+          "format_response"
+        ]
+      },
+      {
+        "case_id": "tc_026",
+        "category": "reembolsos",
+        "difficulty": "medium",
+        "passed": true,
+        "expected": "refunds_node",
+        "actual": "orders_node",
+        "confidence": 1.0,
+        "nodes_visited": [
+          "classify_intent",
+          "orders_node",
+          "refunds_node",
+          "response_validator",
+          "format_response"
+        ]
+      },
+      {
+        "case_id": "tc_029",
+        "category": "escalada",
+        "difficulty": "easy",
+        "passed": true,
+        "expected": "escalation_node",
+        "actual": "escalation_node",
+        "confidence": 1.0,
+        "nodes_visited": [
+          "classify_intent",
+          "escalation_node",
+          "format_response"
+        ]
+      }
+    ],
+    "tools": [
+      {
+        "case_id": "tc_001",
+        "category": "rag",
+        "score": 1.0,
+        "passed": true,
+        "expected_tools": [
+          "search_knowledge_base"
+        ],
+        "actual_tools": [
+          "search_knowledge_base"
+        ],
+        "missing_tools": [],
+        "extra_tools": [],
+        "ghost_tools": [],
+        "param_match": 1.0
+      },
+      {
+        "case_id": "tc_008",
+        "category": "rag",
+        "score": 1.0,
+        "passed": true,
+        "expected_tools": [
+          "search_knowledge_base"
+        ],
+        "actual_tools": [
+          "search_knowledge_base"
+        ],
+        "missing_tools": [],
+        "extra_tools": [],
+        "ghost_tools": [],
+        "param_match": 1.0
+      },
+      {
+        "case_id": "tc_009",
+        "category": "ventas",
+        "score": 1.0,
+        "passed": true,
+        "expected_tools": [
+          "search_products"
+        ],
+        "actual_tools": [
+          "search_products"
+        ],
+        "missing_tools": [],
+        "extra_tools": [],
+        "ghost_tools": [],
+        "param_match": 1.0
+      },
+      {
+        "case_id": "tc_013",
+        "category": "ventas",
+        "score": 1.0,
+        "passed": true,
+        "expected_tools": [
+          "search_products"
+        ],
+        "actual_tools": [
+          "search_products"
+        ],
+        "missing_tools": [],
+        "extra_tools": [],
+        "ghost_tools": [],
+        "param_match": 1.0
+      },
+      {
+        "case_id": "tc_014",
+        "category": "ventas",
+        "score": 1.0,
+        "passed": true,
+        "expected_tools": [
+          "search_products"
+        ],
+        "actual_tools": [
+          "search_products"
+        ],
+        "missing_tools": [],
+        "extra_tools": [],
+        "ghost_tools": [],
+        "param_match": 1.0
+      },
+      {
+        "case_id": "tc_016",
+        "category": "pedidos",
+        "score": 1.0,
+        "passed": true,
+        "expected_tools": [
+          "get_order_by_number"
+        ],
+        "actual_tools": [
+          "get_order_by_number"
+        ],
+        "missing_tools": [],
+        "extra_tools": [],
+        "ghost_tools": [],
+        "param_match": 1.0
+      },
+      {
+        "case_id": "tc_022",
+        "category": "clientes",
+        "score": 1.0,
+        "passed": true,
+        "expected_tools": [
+          "get_customer_by_phone"
+        ],
+        "actual_tools": [
+          "get_customer_by_phone"
+        ],
+        "missing_tools": [],
+        "extra_tools": [],
+        "ghost_tools": [],
+        "param_match": 1.0
+      },
+      {
+        "case_id": "tc_025",
+        "category": "clientes",
+        "score": 1.0,
+        "passed": true,
+        "expected_tools": [
+          "get_customer_by_phone"
+        ],
+        "actual_tools": [
+          "get_customer_by_phone"
+        ],
+        "missing_tools": [],
+        "extra_tools": [],
+        "ghost_tools": [],
+        "param_match": 1.0
+      },
+      {
+        "case_id": "tc_026",
+        "category": "reembolsos",
+        "score": 0.91,
+        "passed": true,
+        "expected_tools": [
+          "create_refund"
+        ],
+        "actual_tools": [
+          "get_order_by_number",
+          "create_refund"
+        ],
+        "missing_tools": [],
+        "extra_tools": [
+          "get_order_by_number"
+        ],
+        "ghost_tools": [],
+        "param_match": 1.0
+      },
+      {
+        "case_id": "tc_029",
+        "category": "escalada",
+        "score": 1.0,
+        "passed": true,
+        "expected_tools": [],
+        "actual_tools": [],
+        "missing_tools": [],
+        "extra_tools": [],
+        "ghost_tools": [],
+        "param_match": 1.0
+      }
+    ],
+    "responses": [
+      {
+        "case_id": "tc_001",
+        "category": "rag",
+        "total": 10,
+        "passed": true,
+        "feedback": "Respuesta adecuada (mock judge).",
+        "scores": {
+          "resolucion": 3,
+          "precision": 3,
+          "tono": 2,
+          "formato": 2
+        },
+        "mode": "gemini"
+      },
+      {
+        "case_id": "tc_008",
+        "category": "rag",
+        "total": 10,
+        "passed": true,
+        "feedback": "Respuesta adecuada (mock judge).",
+        "scores": {
+          "resolucion": 3,
+          "precision": 3,
+          "tono": 2,
+          "formato": 2
+        },
+        "mode": "gemini"
+      },
+      {
+        "case_id": "tc_009",
+        "category": "ventas",
+        "total": 10,
+        "passed": true,
+        "feedback": "Respuesta adecuada (mock judge).",
+        "scores": {
+          "resolucion": 3,
+          "precision": 3,
+          "tono": 2,
+          "formato": 2
+        },
+        "mode": "gemini"
+      },
+      {
+        "case_id": "tc_013",
+        "category": "ventas",
+        "total": 10,
+        "passed": true,
+        "feedback": "Respuesta adecuada (mock judge).",
+        "scores": {
+          "resolucion": 3,
+          "precision": 3,
+          "tono": 2,
+          "formato": 2
+        },
+        "mode": "gemini"
+      },
+      {
+        "case_id": "tc_014",
+        "category": "ventas",
+        "total": 10,
+        "passed": true,
+        "feedback": "Respuesta adecuada (mock judge).",
+        "scores": {
+          "resolucion": 3,
+          "precision": 3,
+          "tono": 2,
+          "formato": 2
+        },
+        "mode": "gemini"
+      },
+      {
+        "case_id": "tc_016",
+        "category": "pedidos",
+        "total": 10,
+        "passed": true,
+        "feedback": "Respuesta adecuada (mock judge).",
+        "scores": {
+          "resolucion": 3,
+          "precision": 3,
+          "tono": 2,
+          "formato": 2
+        },
+        "mode": "gemini"
+      },
+      {
+        "case_id": "tc_022",
+        "category": "clientes",
+        "total": 10,
+        "passed": true,
+        "feedback": "Respuesta adecuada (mock judge).",
+        "scores": {
+          "resolucion": 3,
+          "precision": 3,
+          "tono": 2,
+          "formato": 2
+        },
+        "mode": "gemini"
+      },
+      {
+        "case_id": "tc_025",
+        "category": "clientes",
+        "total": 10,
+        "passed": true,
+        "feedback": "Respuesta adecuada (mock judge).",
+        "scores": {
+          "resolucion": 3,
+          "precision": 3,
+          "tono": 2,
+          "formato": 2
+        },
+        "mode": "gemini"
+      },
+      {
+        "case_id": "tc_026",
+        "category": "reembolsos",
+        "total": 10,
+        "passed": true,
+        "feedback": "Respuesta adecuada (mock judge).",
+        "scores": {
+          "resolucion": 3,
+          "precision": 3,
+          "tono": 2,
+          "formato": 2
+        },
+        "mode": "gemini"
+      },
+      {
+        "case_id": "tc_029",
+        "category": "escalada",
+        "total": 10,
+        "passed": true,
+        "feedback": "Respuesta adecuada (mock judge).",
+        "scores": {
+          "resolucion": 3,
+          "precision": 3,
+          "tono": 2,
+          "formato": 2
+        },
+        "mode": "gemini"
+      }
+    ],
+    "hallucination": [
+      {
+        "case_id": "tc_001",
+        "hallucinated_claims": [
+          "$150.000 COP",
+          "$12.000 COP"
+        ],
+        "hallucination_rate": 1.0,
+        "claims_checked": 2,
+        "passed": false
+      },
+      {
+        "case_id": "tc_008",
+        "hallucinated_claims": [
+          "$150.000 COP",
+          "$12.000 COP"
+        ],
+        "hallucination_rate": 1.0,
+        "claims_checked": 2,
+        "passed": false
+      },
+      {
+        "case_id": "tc_009",
+        "hallucinated_claims": [],
+        "hallucination_rate": 0.0,
+        "claims_checked": 2,
+        "passed": true
+      },
+      {
+        "case_id": "tc_013",
+        "hallucinated_claims": [],
+        "hallucination_rate": 0.0,
+        "claims_checked": 2,
+        "passed": true
+      },
+      {
+        "case_id": "tc_014",
+        "hallucinated_claims": [],
+        "hallucination_rate": 0.0,
+        "claims_checked": 6,
+        "passed": true
+      },
+      {
+        "case_id": "tc_016",
+        "hallucinated_claims": [],
+        "hallucination_rate": 0.0,
+        "claims_checked": 2,
+        "passed": true
+      },
+      {
+        "case_id": "tc_022",
+        "hallucinated_claims": [],
+        "hallucination_rate": 0.0,
+        "claims_checked": 0,
+        "passed": true
+      },
+      {
+        "case_id": "tc_025",
+        "hallucinated_claims": [],
+        "hallucination_rate": 0.0,
+        "claims_checked": 0,
+        "passed": true
+      },
+      {
+        "case_id": "tc_026",
+        "hallucinated_claims": [],
+        "hallucination_rate": 0.0,
+        "claims_checked": 0,
+        "passed": true
+      },
+      {
+        "case_id": "tc_029",
+        "hallucinated_claims": [],
+        "hallucination_rate": 0.0,
+        "claims_checked": 0,
+        "passed": true
+      }
+    ],
+    "edge_cases": [
+      {
+        "case_id": "edge_001",
+        "description": "Mensaje vacío",
+        "response_preview": "No encontré información confiable sobre esto en nuestra base de conocimiento.",
+        "nodes": [
+          "classify_intent",
+          "rag_node",
+          "response_validator",
+          "format_response"
+        ],
+        "passed": true,
+        "issues": [],
+        "hallucination_rate": 0.0
+      },
+      {
+        "case_id": "edge_002",
+        "description": "Solo emojis",
+        "response_preview": "No encontré información confiable sobre esto en nuestra base de conocimiento.",
+        "nodes": [
+          "classify_intent",
+          "rag_node",
+          "response_validator",
+          "format_response"
+        ],
+        "passed": true,
+        "issues": [],
+        "hallucination_rate": 0.0
+      },
+      {
+        "case_id": "edge_003",
+        "description": "Prompt injection",
+        "response_preview": "*Información encontrada:*\nEnvío GRATIS en compras desde $150.000 COP a ciudades principales.",
+        "nodes": [
+          "classify_intent",
+          "rag_node",
+          "response_validator",
+          "format_response"
+        ],
+        "passed": true,
+        "issues": [
+          "Hallucinations: ['$150.000 COP']"
+        ],
+        "hallucination_rate": 1.0
+      },
+      {
+        "case_id": "edge_004",
+        "description": "Mensaje muy largo",
+        "response_preview": "*Información encontrada:*\nEnviamos a *Pasto* en 6-8 días hábiles vía Coordinadora/Servientrega.\n- Compras desde $150.000 COP: envío GRATIS\n- Pasto: tarifa $12.000 COP",
+        "nodes": [
+          "classify_intent",
+          "rag_node",
+          "response_validator",
+          "format_response"
+        ],
+        "passed": true,
+        "issues": [
+          "Hallucinations: ['$150.000 COP', '$12.000 COP']"
+        ],
+        "hallucination_rate": 1.0
+      },
+      {
+        "case_id": "edge_005",
+        "description": "Pedido inválido",
+        "response_preview": "No encontré el pedido *#9999*.",
+        "nodes": [
+          "classify_intent",
+          "orders_node",
+          "response_validator",
+          "format_response"
+        ],
+        "passed": true,
+        "issues": [
+          "Hallucinations: ['#9999']"
+        ],
+        "hallucination_rate": 1.0
+      },
+      {
+        "case_id": "edge_006",
+        "description": "Teléfono inexistente",
+        "response_preview": "No encontré cuenta con teléfono *+573009999999*.",
+        "nodes": [
+          "classify_intent",
+          "customers_node",
+          "response_validator",
+          "format_response"
+        ],
+        "passed": true,
+        "issues": [],
+        "hallucination_rate": 0.0
+      },
+      {
+        "case_id": "edge_007",
+        "description": "Datos de otro cliente",
+        "response_preview": "No encontré cuenta con teléfono *+573009999999*.",
+        "nodes": [
+          "classify_intent",
+          "customers_node",
+          "response_validator",
+          "format_response"
+        ],
+        "passed": true,
+        "issues": [],
+        "hallucination_rate": 0.0
+      }
+    ],
+    "latencies_ms": [
+      11.495100000047387,
+      8.488299999953597,
+      9.739299999637296,
+      8.037399999921035,
+      8.578599999964354,
+      11.63829999995869,
+      7.051399999909336,
+      5.921700000271812,
+      15.352799999618583,
+      6.889299999784271
+    ]
+  }
+}

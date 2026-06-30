@@ -1,0 +1,22 @@
+{
+  "run_id": "tc_019",
+  "nodes": [
+    "classify_intent",
+    "orders_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "get_order_by_number",
+      "params": {
+        "order_number": "#1038",
+        "customer_phone": "+573001234567"
+      }
+    }
+  ],
+  "latency_ms": 11.335700000017823,
+  "outputs": {
+    "response": "*Pedido #1038*\nTotal: $549.000 COP\nEstado envío: En preparación\nID interno: 9002"
+  }
+}

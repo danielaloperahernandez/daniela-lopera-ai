@@ -1,0 +1,39 @@
+# Preguntas Frecuentes — Tienda Colombia
+
+## Medios de pago
+Aceptamos los siguientes métodos de pago en Colombia:
+- *PSE* (débito desde cuenta bancaria)
+- *Nequi* y *Daviplata*
+- Transferencia *Bancolombia* (cuenta de ahorros/corriente)
+- Tarjetas de crédito y débito: Visa, Mastercard, American Express
+- Contra entrega en Bogotá, Medellín y Cali (solo compras hasta $500.000 COP)
+
+Todos los pagos se procesan de forma segura. No almacenamos datos completos de tarjeta.
+
+## Garantías
+- Productos electrónicos: 12 meses por defectos de fábrica
+- Electrodomésticos: 12 meses con servicio autorizado en Colombia
+- Ropa y accesorios: 30 días por defectos de confección
+- La garantía NO cubre daños por mal uso, caídas, humedad o modificaciones
+
+Para hacer efectiva la garantía, conserva tu factura y escríbenos con el número de pedido.
+
+## Horarios de atención
+- *Asistente virtual (este chat):* disponible 24/7
+- *Agentes humanos:* lunes a viernes de 8:00 a.m. a 6:00 p.m. (hora Colombia)
+- Sábados: 9:00 a.m. a 1:00 p.m.
+- Domingos y festivos: solo el bot; casos urgentes se escalan al siguiente día hábil
+
+## Tiempos de respuesta humana
+Si escalas tu caso a un asesor, te contactamos en máximo 24 horas hábiles.
+
+## ¿Cómo rastreo mi pedido?
+Escribe "estado de mi pedido" seguido del número (ejemplo: #1042). Validamos tu teléfono antes de mostrar información.
+
+## ¿Puedo cambiar la dirección de envío?
+Sí, solo si el pedido aún no fue despachado. Escríbenos cuanto antes con el número de pedido.
+
+## Contacto adicional
+- WhatsApp: este chat
+- Email: soporte@tienda-colombia.com
+- Instagram: @tienda_colombia

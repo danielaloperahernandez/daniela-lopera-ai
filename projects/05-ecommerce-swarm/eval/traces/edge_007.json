@@ -1,0 +1,21 @@
+{
+  "run_id": "edge_007",
+  "nodes": [
+    "classify_intent",
+    "customers_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "get_customer_by_phone",
+      "params": {
+        "phone": "+573009999999"
+      }
+    }
+  ],
+  "latency_ms": 15.75860000002649,
+  "outputs": {
+    "response": "No encontré cuenta con teléfono *+573009999999*."
+  }
+}

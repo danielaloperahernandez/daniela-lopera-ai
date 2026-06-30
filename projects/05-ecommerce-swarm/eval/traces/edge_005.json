@@ -1,0 +1,22 @@
+{
+  "run_id": "edge_005",
+  "nodes": [
+    "classify_intent",
+    "orders_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "get_order_by_number",
+      "params": {
+        "order_number": "#9999",
+        "customer_phone": "+573001234567"
+      }
+    }
+  ],
+  "latency_ms": 16.889500000161206,
+  "outputs": {
+    "response": "No encontré el pedido *#9999*."
+  }
+}

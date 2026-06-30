@@ -1,0 +1,30 @@
+{
+  "run_id": "tc_026",
+  "nodes": [
+    "classify_intent",
+    "orders_node",
+    "refunds_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "get_order_by_number",
+      "params": {
+        "order_number": "#1042",
+        "customer_phone": "+573001234567"
+      }
+    },
+    {
+      "name": "create_refund",
+      "params": {
+        "order_id": "9001",
+        "reason": "Producto dañado"
+      }
+    }
+  ],
+  "latency_ms": 18.71309999978621,
+  "outputs": {
+    "response": "*Reembolso iniciado* para pedido 9001. Motivo: Producto dañado"
+  }
+}

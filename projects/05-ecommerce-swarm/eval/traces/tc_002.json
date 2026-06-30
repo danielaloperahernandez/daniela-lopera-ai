@@ -1,0 +1,21 @@
+{
+  "run_id": "tc_002",
+  "nodes": [
+    "classify_intent",
+    "rag_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "search_knowledge_base",
+      "params": {
+        "query": "Cliente: ¿Cuál es la política de devoluciones y cuántos días tengo?"
+      }
+    }
+  ],
+  "latency_ms": 10.057100000267383,
+  "outputs": {
+    "response": "*Información encontrada:*\nPlazo de *30 días* para devoluciones. Producto sin usar en empaque original."
+  }
+}

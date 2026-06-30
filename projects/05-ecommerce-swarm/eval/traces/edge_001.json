@@ -1,0 +1,21 @@
+{
+  "run_id": "edge_001",
+  "nodes": [
+    "classify_intent",
+    "rag_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "search_knowledge_base",
+      "params": {
+        "query": "Cliente:"
+      }
+    }
+  ],
+  "latency_ms": 18.579099999897153,
+  "outputs": {
+    "response": "No encontré información confiable sobre esto en nuestra base de conocimiento."
+  }
+}

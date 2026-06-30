@@ -1,0 +1,21 @@
+{
+  "run_id": "tc_004",
+  "nodes": [
+    "classify_intent",
+    "rag_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "search_knowledge_base",
+      "params": {
+        "query": "Cliente: ¿Cuál es el horario de atención de agentes humanos?"
+      }
+    }
+  ],
+  "latency_ms": 9.660499999881722,
+  "outputs": {
+    "response": "*Información encontrada:*\nAgentes humanos: lun-vie 8am-6pm, sáb 9am-1pm. Bot 24/7."
+  }
+}

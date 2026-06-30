@@ -1,0 +1,21 @@
+{
+  "run_id": "tc_001",
+  "nodes": [
+    "classify_intent",
+    "rag_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "search_knowledge_base",
+      "params": {
+        "query": "Cliente: ¿Hacen envíos a Pasto?"
+      }
+    }
+  ],
+  "latency_ms": 16.082399999959307,
+  "outputs": {
+    "response": "*Información encontrada:*\nEnviamos a *Pasto* en 6-8 días hábiles vía Coordinadora/Servientrega.\n- Compras desde $150.000 COP: envío GRATIS\n- Pasto: tarifa $12.000 COP"
+  }
+}

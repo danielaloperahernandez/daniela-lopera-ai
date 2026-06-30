@@ -15,7 +15,7 @@ into real operations** without reinventing the wheel. This repo shows exactly th
 runnable projects that demonstrate when to reach for **n8n** (speed of orchestration) and when to
 reach for **Python** (complex, robust logic), all backed by a shared, production-style AI core.
 
-No marketing titles. No throwaway tutorials. Four deep projects, polished.
+No marketing titles. No throwaway tutorials. Five deep projects, polished.
 
 ## The projects
 
@@ -25,6 +25,7 @@ No marketing titles. No throwaway tutorials. Four deep projects, polished.
 | 2 | [Autonomous Support Agent](projects/02-autonomous-support-agent) (Advanced n8n) | A real autonomous business flow: classify intent with an LLM, query a knowledge base, answer, with **production error handling**. | n8n, Telegram, LLM, Qdrant |
 | 3 | [RAG Engine](projects/03-rag-engine) (Pure Python) | Hard AI engineering: retrieval-augmented generation with structured outputs, rate-limit handling, and a real **evaluation harness**. | LangChain, Qdrant, Ragas |
 | 4 | [ManoExperta Voice Agent](projects/04-manoexperta-voice-agent) (Voice + n8n) | A production-style voice agent: tool-using LLM, RAG guidance, and full appointment booking with a DB concurrency lock and a fault-tolerance layer. | Vapi, n8n, Pinecone, Postgres, Google Calendar |
+| 5 | [Ecommerce Swarm](projects/05-ecommerce-swarm) (Multi-Agent Python) | LangGraph swarm for Shopify support over WhatsApp: specialized agents, ChromaDB RAG, order/refund tools, validation loop, and production webhook security. | LangGraph, Gemini, FastAPI, Shopify, ChromaDB, Redis |
 
 Projects 1-3 share [`shared/ai_core`](shared/ai_core): a multi-provider LLM + embeddings
 layer (OpenAI / Anthropic / Gemini, swappable by env var) and a Qdrant vector-store wrapper.

@@ -1,0 +1,21 @@
+{
+  "run_id": "tc_017",
+  "nodes": [
+    "classify_intent",
+    "orders_node",
+    "response_validator",
+    "format_response"
+  ],
+  "tools": [
+    {
+      "name": "get_customer_orders",
+      "params": {
+        "phone": "+573001234567"
+      }
+    }
+  ],
+  "latency_ms": 11.479199999939738,
+  "outputs": {
+    "response": "*Últimos pedidos:*\n- #1042 — $899.000 COP\n- #1038 — $549.000 COP"
+  }
+}
