@@ -128,7 +128,7 @@ export const projects: Project[] = [
     repoPath: "projects/04-manoexperta-voice-agent",
     demoNote: "Demo: a call that gives a safe tip, books a visit, then cancels it on a callback.",
     image: "/diagrams/manoexperta-voice-flow.png",
-    videoUrl: "/videos/manoexperta-voice-agent.mp4", // Inserta aquí tu ID
+    videoUrl: "/videos/demo_mano_experta.mp4", // Inserta aquí tu ID
   },
   {
     slug: "ecommerce-swarm",
