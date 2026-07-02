@@ -99,14 +99,26 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </ul>
         </section>
 
-        <section className="card mt-8 border-dashed">
+        <section className="card mt-8">
           <h2 className="text-lg font-semibold text-white">Demo</h2>
           <p className="mt-2 text-slate-400">{project.demoNote}</p>
-          <div className="mt-4 flex aspect-video items-center justify-center rounded-xl border border-slate-800 bg-slate-950/60 text-sm text-slate-500">
-            Demo recording placeholder (add a Loom link or demo.gif)
-          </div>
+          
+          {project.videoUrl ? (
+            <div className="mt-4 aspect-video w-full overflow-hidden rounded-xl border border-slate-800 bg-slate-950/60">
+              <iframe
+                src={project.videoUrl}
+                title={`Demo of ${project.title}`}
+                className="h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          ) : (
+            <div className="mt-4 flex aspect-video items-center justify-center rounded-xl border border-slate-800 bg-slate-950/60 text-sm text-slate-500">
+              Demo recording coming soon
+            </div>
+          )}
         </section>
-
         <div className="mt-8 flex flex-wrap gap-3">
           <a
             href={repoUrl}

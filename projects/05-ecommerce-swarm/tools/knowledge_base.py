@@ -20,7 +20,7 @@ def _get_embeddings() -> GoogleGenerativeAIEmbeddings:
     if _embeddings is None:
         settings = get_settings()
         _embeddings = GoogleGenerativeAIEmbeddings(
-            model="models/embedding-001",
+            model="gemini-embedding-2-preview",
             google_api_key=settings.gemini_api_key,
         )
     return _embeddings

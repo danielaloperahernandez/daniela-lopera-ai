@@ -12,6 +12,7 @@ export type Project = {
   repoPath: string;
   demoNote: string;
   image?: string;
+  videoUrl?: string; // Propiedad añadida
 };
 
 export const projects: Project[] = [
@@ -127,6 +128,7 @@ export const projects: Project[] = [
     repoPath: "projects/04-manoexperta-voice-agent",
     demoNote: "Demo: a call that gives a safe tip, books a visit, then cancels it on a callback.",
     image: "/diagrams/manoexperta-voice-flow.png",
+    videoUrl: "https://drive.google.com/file/d/1K_h8o0TIl-rfHHH6Hj4sb9HKhlIQb7cw/view?usp=sharing", // Inserta aquí tu ID
   },
   {
     slug: "ecommerce-swarm",
